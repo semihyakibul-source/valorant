@@ -1,7 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValoDrop | Kasa Aç</title>
+    <style>
+        body { background-color: #0f1923; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; }
+        nav { background: #1f2326; padding: 15px; border-bottom: 2px solid #ff4655; display: flex; justify-content: space-around; }
+        .btn-valorant { background: #ff4655; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        .container { margin-top: 50px; }
+        .case-box { border: 2px solid #333; width: 300px; margin: 0 auto; padding: 20px; background: #111; }
+        .case-img { width: 200px; margin-bottom: 20px; }
+        #result { margin-top: 20px; font-size: 24px; color: #ff4655; font-weight: bold; }
+        .inventory { margin-top: 40px; background: #1b1e21; padding: 20px; }
+    </style>
+</head>
 <body>
-    <h1>Valorant Kasa Sitesi Yayında!</h1>
-    <p>Dosya başarıyla yüklendi.</p>
+
+<nav>
+    <div style="font-size: 24px; font-weight: bold; color: #ff4655;">VALODROP</div>
+    <button class="btn-valorant" onclick="alert('Giriş sistemi yakında eklenecek!')">GİRİŞ YAP</button>
+</nav>
+
+<div class="container">
+    <h1>VALORANT KOLEKSİYON KASASI</h1>
+    <div class="case-box">
+        <img src="https://admin.vlr.gg/img/base/ph.png" alt="Kasa" class="case-img" id="case-display">
+        <br>
+        <button class="btn-valorant" style="width: 100%; font-size: 18px;" onclick="kasaAc()">KASAYI AÇ (ÜCRETSİZ)</button>
+    </div>
+    <div id="result">Kutuyu açmak için tıkla!</div>
+</div>
+
+<div class="inventory">
+    <h3>ENVANTERİN</h3>
+    <div id="items-list">Henüz bir şey yok...</div>
+</div>
+
+<script>
+    const skinler = [
+        {ad: "Vandal | Yağmacı", sans: 10},
+        {ad: "Phantom | Oni", sans: 15},
+        {ad: "Bıçak | Karambit", sans: 5},
+        {ad: "Classic | Standart", sans: 70}
+    ];
+
+    function kasaAc() {
+        document.getElementById("result").innerText = "Kasa dönüyor...";
+        
+        setTimeout(() => {
+            let rastgele = Math.random() * 100;
+            let secilen;
+
+            if (rastgele < 5) secilen = skinler[2];      // Bıçak
+            else if (rastgele < 15) secilen = skinler[0]; // Vandal
+            else if (rastgele < 30) secilen = skinler[1]; // Phantom
+            else secilen = skinler[3];                    // Classic
+
+            document.getElementById("result").innerText = "TEBRİKLER: " + secilen.ad;
+            
+            // Envantere ekle
+            let liste = document.getElementById("items-list");
+            if(liste.innerText.includes("Henüz")) liste.innerText = "";
+            liste.innerHTML += "<div>" + secilen.ad + "</div>";
+        }, 1000);
+    }
+</script>
+
 </body>
 </html>
