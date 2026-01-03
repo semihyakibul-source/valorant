@@ -21,9 +21,9 @@
 
         /* ÖZEL BİLDİRİM KUTUSU (TOAST) */
         #notification {
-            position: fixed; top: 20px; right: -300px; width: 250px; 
-            background: #ff4655; color: white; padding: 15px; 
-            font-weight: bold; border-left: 5px solid #ece8e1;
+            position: fixed; top: 20px; right: -350px; width: 280px; 
+            color: white; padding: 15px; 
+            font-weight: bold; border-left: 5px solid white;
             z-index: 1000; transition: right 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.27);
             text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
@@ -36,6 +36,10 @@
         .nav-logo { height: 35px; filter: drop-shadow(0 0 5px #ff4655); }
         .site-title { font-size: 26px; font-weight: bold; color: #ff4655; letter-spacing: 3px; }
 
+        /* GİRİŞ EKRANI */
+        #auth-container { margin: 60px auto; max-width: 400px; background: rgba(27, 31, 35, 0.95); padding: 40px; border: 1px solid #ff4655; border-radius: 8px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; background: #0f1923; border: 1px solid #444; color: white; outline: none; }
+        
         /* HEDİYE PAKETİ AÇILIŞI */
         #gift-box-container { margin-top: 50px; }
         .gift-box-start { width: 180px; cursor: pointer; transition: 0.3s; filter: drop-shadow(0 0 15px #ff4655); }
@@ -66,11 +70,9 @@
 
         /* BUTONLAR */
         .btn-valorant { background: #ff4655; color: white; border: none; padding: 12px 24px; cursor: pointer; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
+        .btn-valorant:hover { background: #ece8e1; color: #ff4655; }
         .inventory { margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.3); }
         .item-card { background: #1f2326; padding: 10px; margin: 8px; border: 1px solid #444; display: inline-block; min-width: 150px; }
-        
-        #auth-container { margin: 60px auto; max-width: 400px; background: rgba(27, 31, 35, 0.95); padding: 40px; border: 1px solid #ff4655; }
-        input { width: 90%; padding: 12px; margin: 10px 0; background: #0f1923; border: 1px solid #444; color: white; outline: none; }
     </style>
 </head>
 <body>
@@ -87,7 +89,7 @@
 </nav>
 
 <div id="auth-container">
-    <h2 style="color: #ece8e1;">YILBAŞI GİRİŞİ</h2>
+    <h2 style="color: #ece8e1; margin-top: 0;">VALORANT HESABI</h2>
     <input type="text" id="username" placeholder="KULLANICI ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
     <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
@@ -129,11 +131,12 @@
     }
     createSnow();
 
-    // BİLDİRİM GÖSTERME FONKSİYONU
+    // BİLDİRİM RENKLERİ GÜNCELLENDİ
     function showNotify(msg, isError = false) {
         const notify = document.getElementById('notification');
         notify.innerText = msg;
-        notify.style.background = isError ? "#333" : "#ff4655"; // Hata ise gri, başarılıysa kırmızı
+        // Başarılı: Açık Yeşil (#28a745), Hata: Açık Kırmızı (#dc3545)
+        notify.style.background = isError ? "#dc3545" : "#28a745"; 
         notify.classList.add('show');
         setTimeout(() => { notify.classList.remove('show'); }, 3000);
     }
@@ -207,16 +210,14 @@
     async function kayitOl() {
         const u = document.getElementById('username').value, p = document.getElementById('password').value;
         if(!u || !p) return showNotify("LÜTFEN ALANLARI DOLDUR!", true);
-        
         const { error } = await _supabase.from('users').insert([{ username: u, password: p }]);
-        if(error) showNotify("HATA: " + error.message, true);
+        if(error) showNotify("BU KULLANICI ADI ALINMIŞ!", true);
         else showNotify("BAŞARIYLA KAYIT OLUNDU!");
     }
 
     async function girisYap() {
         const u = document.getElementById('username').value, p = document.getElementById('password').value;
         if(!u || !p) return showNotify("ALANLARI DOLDUR!", true);
-
         const { data } = await _supabase.from('users').select('*').eq('username', u).eq('password', p);
         if (data && data.length > 0) {
             showNotify("GİRİŞ BAŞARILI!");
@@ -224,8 +225,9 @@
                 document.getElementById('auth-container').style.display = 'none';
                 document.getElementById('game-container').style.display = 'block';
                 document.getElementById('welcome-msg').innerText = "Mutlu Yıllar, " + u + "!";
+                document.getElementById('user-display').innerText = "👤 " + u;
             }, 1000);
-        } else showNotify("KULLANICI ADI VEYA ŞİFRE HATALI!", true);
+        } else showNotify("HATA: BİLGİLER YANLIŞ!", true);
     }
 </script>
 </body>
