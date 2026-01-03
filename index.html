@@ -35,16 +35,17 @@
         }
 
         .nav-logo {
-            height: 30px; /* Logo boyutunu biraz optimize ettim */
+            height: 35px;
             width: auto;
+            /* Pembe versiyon olduğu için drop-shadow'u da ona göre ayarladım */
             filter: drop-shadow(0 0 5px #ff4655);
         }
 
         .site-title {
-            font-size: 24px; 
+            font-size: 26px; 
             font-weight: bold; 
             color: #ff4655;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-shadow: 2px 2px 0px #000;
         }
 
@@ -134,7 +135,7 @@
 
 <nav>
     <div class="logo-section">
-        <img src="https://cmsassets.rgpub.io/assets/v3/assets/bltb6530b271fddd0b1/blt1931393693e5a034/626090885e34774618a38528/Val_Logo_Small.png" class="nav-logo" alt="V-Logo">
+        <img src="Valorant_logo_-_pink_color_version.svg.png" class="nav-logo" alt="Logo">
         
         <div class="site-title">VALORANT-GIFT</div>
         
@@ -144,7 +145,7 @@
 </nav>
 
 <div id="auth-container">
-    <h2 style="color: #ece8e1; margin-top: 0;">KAYIT OL</h2>
+    <h2 style="color: #ece8e1; margin-top: 0;">ERİŞİM SAĞLA</h2>
     <input type="text" id="username" placeholder="KULLANICI ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
     <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
@@ -167,7 +168,6 @@
 </div>
 
 <script>
-    // SUPABASE BAĞLANTISI
     const SUPABASE_URL = 'https://iigemvvlznvgneghevev.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
