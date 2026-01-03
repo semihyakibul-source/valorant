@@ -3,69 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ValoDrop | Kasa Aç</title>
+    <title>ValoDrop | Kullanıcı Sistemi</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background-color: #0f1923; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; }
-        nav { background: #1f2326; padding: 15px; border-bottom: 2px solid #ff4655; display: flex; justify-content: space-around; }
-        .btn-valorant { background: #ff4655; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
-        .container { margin-top: 50px; }
-        .case-box { border: 2px solid #333; width: 300px; margin: 0 auto; padding: 20px; background: #111; }
-        .case-img { width: 200px; margin-bottom: 20px; }
-        #result { margin-top: 20px; font-size: 24px; color: #ff4655; font-weight: bold; }
-        .inventory { margin-top: 40px; background: #1b1e21; padding: 20px; }
+        nav { background: #1f2326; padding: 15px; border-bottom: 2px solid #ff4655; display: flex; justify-content: space-around; align-items: center; }
+        .btn-valorant { background: #ff4655; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-valorant:hover { background: #cf3a46; transform: scale(1.05); }
+        
+        #auth-container { margin: 80px auto; max-width: 350px; background: #1b1e21; padding: 30px; border: 1px solid #333; border-radius: 8px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; background: #0f1923; border: 1px solid #444; color: white; border-radius: 4px; }
+        
+        #game-container { display: none; margin-top: 50px; }
+        .case-box { border: 2px solid #333; width: 300px; margin: 0 auto; padding: 20px; background: #111; border-radius: 10px; }
+        #result { margin-top: 20px; font-size: 22px; color: #ff4655; font-weight: bold; min-height: 30px; }
+        
+        .inventory { margin-top: 40px; background: #1b1e21; padding: 20px; border-top: 1px solid #333; }
+        .item-card { background: #0f1923; padding: 10px; margin: 5px; border-left: 4px solid #ff4655; display: inline-block; width: 200px; text-align: left; }
     </style>
 </head>
 <body>
 
 <nav>
     <div style="font-size: 24px; font-weight: bold; color: #ff4655;">VALODROP</div>
-    <button class="btn-valorant" onclick="alert('Giriş sistemi yakında eklenecek!')">GİRİŞ YAP</button>
+    <div id="user-display" style="font-weight: bold; color: #ece8e1;"></div>
 </nav>
 
-<div class="container">
-    <h1>VALORANT KOLEKSİYON KASASI</h1>
-    <div class="case-box">
-        <img src="https://admin.vlr.gg/img/base/ph.png" alt="Kasa" class="case-img" id="case-display">
-        <br>
-        <button class="btn-valorant" style="width: 100%; font-size: 18px;" onclick="kasaAc()">KASAYI AÇ (ÜCRETSİZ)</button>
-    </div>
-    <div id="result">Kutuyu açmak için tıkla!</div>
+<div id="auth-container">
+    <h2 style="color: #ff4655; margin-bottom: 20px;">HOŞ GELDİN</h2>
+    <input type="text" id="username" placeholder="Kullanıcı Adı">
+    <input type="password" id="password" placeholder="Şifre">
+    <button class="btn-valorant" style="width: 100%; margin-top: 10px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
+    <p style="font-size: 12px; color: #888;">Zaten hesabın varsa aşağıdan giriş yap:</p>
+    <button class="btn-valorant" style="width: 100%; background: #333;" onclick="girisYap()">GİRİŞ YAP</button>
 </div>
 
-<div class="inventory">
-    <h3>ENVANTERİN</h3>
-    <div id="items-list">Henüz bir şey yok...</div>
+<div id="game-container">
+    <h1 id="welcome-msg"></h1>
+    <div class="case-box">
+        <img src="https://media.valorant-api.com/sprays/2884a866-4f9e-648b-30d8-1e9671d60461/fullicon.png" width="120" alt="Kasa">
+        <h3 style="margin: 10px 0;">KOLEKSİYON KASASI</h3>
+        <button class="btn-valorant" style="width: 100%;" onclick="kasaAc()">KASAYI AÇ (ÜCRETSİZ)</button>
+    </div>
+    <div id="result">Şansını dene!</div>
+
+    <div class="inventory">
+        <h3>ENVANTERİN</h3>
+        <div id="items-list">Henüz bir skin çıkarmadın.</div>
+    </div>
+    
+    <button class="btn-valorant" style="margin-top: 30px; background: #333;" onclick="location.reload()">ÇIKIŞ YAP</button>
 </div>
 
 <script>
-    const skinler = [
-        {ad: "Vandal | Yağmacı", sans: 10},
-        {ad: "Phantom | Oni", sans: 15},
-        {ad: "Bıçak | Karambit", sans: 5},
-        {ad: "Classic | Standart", sans: 70}
-    ];
+    // SUPABASE BAĞLANTISI
+    const SUPABASE_URL = 'https://iigemvvlznvgneghevev.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm'; // Not: Bu senin public key'in olmalı.
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // KAYIT OLMA
+    async function kayitOl() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        if(!user || !pass) return alert("Lütfen alanları doldur!");
+
+        const { data, error } = await _supabase
+            .from('users')
+            .insert([{ username: user, password: pass }]);
+
+        if (error) {
+            console.error(error);
+            alert("Kayıt sırasında bir hata oluştu: " + error.message);
+        } else {
+            alert("Başarıyla kayıt oldun! Şimdi giriş yapabilirsin.");
+        }
+    }
+
+    // GİRİŞ YAPMA
+    async function girisYap() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        const { data, error } = await _supabase
+            .from('users')
+            .select('*')
+            .eq('username', user)
+            .eq('password', pass);
+
+        if (data && data.length > 0) {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('welcome-msg').innerText = "Selam, " + user + "!";
+            document.getElementById('user-display').innerText = "👤 " + user;
+        } else {
+            alert("Kullanıcı adı veya şifre hatalı!");
+        }
+    }
+
+    // KASA AÇMA
     function kasaAc() {
-        document.getElementById("result").innerText = "Kasa dönüyor...";
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerText = "Kasa açılıyor...";
         
         setTimeout(() => {
-            let rastgele = Math.random() * 100;
-            let secilen;
-
-            if (rastgele < 5) secilen = skinler[2];      // Bıçak
-            else if (rastgele < 15) secilen = skinler[0]; // Vandal
-            else if (rastgele < 30) secilen = skinler[1]; // Phantom
-            else secilen = skinler[3];                    // Classic
-
-            document.getElementById("result").innerText = "TEBRİKLER: " + secilen.ad;
+            const skinler = [
+                "Vandal | Yağmacı", 
+                "Phantom | Oni", 
+                "Bıçak | Karambit", 
+                "Classic | Standart",
+                "Sheriff | İyon",
+                "Operator | Ejder Ateşi"
+            ];
+            const secilen = skinler[Math.floor(Math.random() * skinler.length)];
+            resultDiv.innerText = "TEBRİKLER: " + secilen;
             
-            // Envantere ekle
-            let liste = document.getElementById("items-list");
+            // Envantere ekle (Görsel olarak)
+            const liste = document.getElementById("items-list");
             if(liste.innerText.includes("Henüz")) liste.innerText = "";
-            liste.innerHTML += "<div>" + secilen.ad + "</div>";
-        }, 1000);
+            liste.innerHTML += `<div class="item-card">✨ ${secilen}</div>`;
+        }, 800);
     }
 </script>
-
 </body>
 </html>
