@@ -17,7 +17,7 @@
         .nav-logo { height: 35px; filter: drop-shadow(0 0 5px #ff4655); }
         .site-title { font-size: 26px; font-weight: bold; color: #ff4655; letter-spacing: 3px; }
 
-        /* RULET SİSTEMİ CSS */
+        /* RULET SİSTEMİ */
         .roulette-wrapper {
             position: relative;
             display: flex;
@@ -29,14 +29,14 @@
         .roulette-container {
             position: relative;
             width: 600px;
-            height: 150px;
+            height: 160px;
             border: 2px solid #ff4655;
             background: #111;
             overflow: hidden;
             border-radius: 4px;
+            box-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
         }
 
-        /* Ruletin ortasındaki kırmızı çizgi */
         .selector {
             position: absolute;
             top: 0;
@@ -46,7 +46,7 @@
             height: 100%;
             background-color: #ff4655;
             z-index: 10;
-            box-shadow: 0 0 15px rgba(255, 70, 85, 0.8);
+            box-shadow: 0 0 15px #ff4655;
         }
 
         #roulette-strip {
@@ -55,13 +55,13 @@
             left: 0;
             top: 0;
             height: 100%;
-            transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1); /* Yumuşak duruş efekti */
+            transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1);
             will-change: transform;
         }
 
         .skin-item {
-            min-width: 150px;
-            height: 150px;
+            min-width: 160px;
+            height: 160px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -70,13 +70,21 @@
             background: linear-gradient(180deg, #1b1e21 0%, #0f1923 100%);
         }
 
-        .skin-item img { width: 80px; margin-bottom: 10px; }
-        .skin-item span { font-size: 12px; font-weight: bold; text-align: center; padding: 0 5px; }
+        .skin-item img { 
+            width: 120px; 
+            height: auto; 
+            object-fit: contain;
+            margin-bottom: 10px; 
+        }
 
-        /* BUTONLAR VE DİĞERLERİ */
+        .skin-item span { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #ece8e1; }
+
+        /* DİĞER STİLLER */
         #auth-container { margin: 60px auto; max-width: 400px; background: rgba(27, 31, 35, 0.95); padding: 40px; border: 1px solid #ff4655; }
-        input { width: 90%; padding: 12px; margin: 10px 0; background: #0f1923; border: 1px solid #444; color: white; }
-        .btn-valorant { background: #ff4655; color: white; border: none; padding: 12px 24px; cursor: pointer; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
+        input { width: 90%; padding: 12px; margin: 10px 0; background: #0f1923; border: 1px solid #444; color: white; outline: none; }
+        .btn-valorant { background: #ff4655; color: white; border: none; padding: 12px 24px; cursor: pointer; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.3s; }
+        .btn-valorant:hover { background: #ece8e1; color: #ff4655; }
+        .btn-valorant:disabled { background: #555; cursor: not-allowed; }
         #game-container { display: none; margin-top: 30px; }
         .inventory { margin-top: 50px; padding: 20px; background: rgba(0,0,0,0.3); }
         .item-card { background: #1f2326; padding: 10px; margin: 8px; border: 1px solid #444; display: inline-block; min-width: 150px; }
@@ -94,7 +102,7 @@
 </nav>
 
 <div id="auth-container">
-    <h2 style="color: #ece8e1;">ERİŞİM SAĞLA</h2>
+    <h2 style="color: #ece8e1; margin-top: 0;">VALORANT ile KAYIT OL</h2>
     <input type="text" id="username" placeholder="KULLANICI ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
     <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
@@ -125,25 +133,23 @@
     const SUPABASE_KEY = 'sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // RUETTEKİ SKİNLER
+    // KENDİ YÜKLEDİĞİN RESİM İSİMLERİYLE HAVUZ
     const skinHavuzu = [
-        { ad: "Vandal | Yağmacı", img: "https://media.valorant-api.com/skinchromas/7f6d9006-444b-4b15-9c59-b003a74586f1/fullrender.png" },
-        { ad: "Phantom | Oni", img: "https://media.valorant-api.com/skinchromas/65d1b747-497d-6691-3269-a1854593442a/fullrender.png" },
-        { ad: "Bıçak | Karambit", img: "https://media.valorant-api.com/skinchromas/1283e30f-48d6-6a56-5423-f2b76e1f0e42/fullrender.png" },
-        { ad: "Sheriff | İyon", img: "{https://media.valorant-api.com/skinchromas/612f0fc9-410a-1e64-3253-1fa765275825/fullrender.png" },
-        { ad: "Operator | Ejder", img: "https://media.valorant-api.com/skinchromas/6326e2e5-403b-d5a2-386f-2b8109315d96/fullrender.png" }
+        { ad: "Yağmacı Vandal", img: "7-seviye-yagmaci-vandalstil-3-beyaz_valorant_full_skin_166121.png" },
+        { ad: "Ejder Ateşi Operator", img: "Ejder Ateşi Operator - Valorant.png" },
+        { ad: "İyon Sheriff", img: "iyon-sheriff_valorant_full_skin_166481.png" },
+        { ad: "Oni Phantom", img: "oni-phantom_valorant_full_skin_166208.png" }
     ];
 
-    // Ruleti hazırlayan fonksiyon
     function ruletHazirla() {
         const strip = document.getElementById('roulette-strip');
         strip.innerHTML = '';
-        // Ruletin uzun görünmesi için listeyi 10 kez tekrarlıyoruz
-        for(let i=0; i<50; i++) {
+        // 80 öğe ekleyerek uzun bir şerit oluşturuyoruz
+        for(let i=0; i<80; i++) {
             const skin = skinHavuzu[Math.floor(Math.random() * skinHavuzu.length)];
             strip.innerHTML += `
                 <div class="skin-item">
-                    <img src="${skin.img}">
+                    <img src="${skin.img}" onerror="this.src='https://via.placeholder.com/120x60/111/ff4655?text=YUKLENIYOR...'">
                     <span>${skin.ad}</span>
                 </div>
             `;
@@ -158,27 +164,26 @@
         btn.disabled = true;
         resultDiv.innerText = "";
         
-        // Ruleti başlangıç pozisyonuna al
         strip.style.transition = "none";
         strip.style.transform = "translateX(0)";
         
-        ruletHazirla(); // Rastgele skinleri diz
+        ruletHazirla();
 
         setTimeout(() => {
             strip.style.transition = "transform 5s cubic-bezier(0.1, 0, 0.1, 1)";
-            const rastgeleKayma = Math.floor(Math.random() * 500) + 5000; // Rastgele bir noktada durması için
+            // 160px genişliğinde skinler kullandığımız için ona göre mesafe
+            const rastgeleKayma = Math.floor(Math.random() * 800) + 7000; 
             strip.style.transform = `translateX(-${rastgeleKayma}px)`;
 
             setTimeout(() => {
-                // Kazanan skini hesapla (çizginin altındaki)
                 const items = document.getElementsByClassName('skin-item');
-                const index = Math.floor((rastgeleKayma + 300) / 150);
+                // Tam ortadaki skini bulma hesabı (600px container / 2 = 300px orta nokta)
+                const index = Math.floor((rastgeleKayma + 300) / 160);
                 const kazanan = items[index].querySelector('span').innerText;
                 
-                resultDiv.innerText = "TEBRİKLER: " + kazanan;
+                resultDiv.innerText = "KAZANILAN: " + kazanan;
                 btn.disabled = false;
 
-                // Envantere ekle
                 const list = document.getElementById("items-list");
                 if(list.innerText.includes("Henüz")) list.innerText = "";
                 list.innerHTML += `<div class="item-card">🎁 ${kazanan}</div>`;
@@ -186,12 +191,13 @@
         }, 100);
     }
 
-    // AUTH FONKSİYONLARI (AYNI KALDI)
     async function kayitOl() {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
+        if(!u || !p) return alert("Boş bırakma!");
         const { error } = await _supabase.from('users').insert([{ username: u, password: p }]);
-        if (error) alert("Hata!"); else alert("Başarılı!");
+        if (error) alert("Hata: " + error.message);
+        else alert("Kayıt başarılı!");
     }
 
     async function girisYap() {
@@ -202,9 +208,13 @@
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             document.getElementById('welcome-msg').innerText = "Hoş geldin, " + u;
+            document.getElementById('user-display').innerText = "👤 " + u;
             ruletHazirla();
-        } else { alert("Hata!"); }
+        } else {
+            alert("Hatalı giriş!");
+        }
     }
 </script>
+
 </body>
 </html>
