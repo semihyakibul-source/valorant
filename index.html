@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VALORANT-GIFT | Yılbaşı Özel</title>
+    
+    <link rel="icon" type="image/png" href="Valorant_logo_-_pink_color_version.svg.png">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* GENEL TASARIM */
@@ -37,7 +40,6 @@
         .nav-logo {
             height: 35px;
             width: auto;
-            /* Pembe versiyon olduğu için drop-shadow'u da ona göre ayarladım */
             filter: drop-shadow(0 0 5px #ff4655);
         }
 
@@ -145,7 +147,7 @@
 </nav>
 
 <div id="auth-container">
-    <h2 style="color: #ece8e1; margin-top: 0;">Kayıt Ol</h2>
+    <h2 style="color: #ece8e1; margin-top: 0;">ERİŞİM SAĞLA</h2>
     <input type="text" id="username" placeholder="KULLANICI ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
     <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
@@ -168,6 +170,7 @@
 </div>
 
 <script>
+    // SUPABASE BAĞLANTISI
     const SUPABASE_URL = 'https://iigemvvlznvgneghevev.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
