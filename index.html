@@ -3,90 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VALORANT-GIFT | Rulet</title>
+    <title>VALORANT-GIFT | Yılbaşı Özel</title>
     
     <link rel="icon" type="image/png" href="Valorant_logo_-_pink_color_version.svg.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        body { background-color: #0f1923; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; overflow-x: hidden; }
-        
+        body { 
+            background-color: #0f1923; 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            text-align: center; 
+            margin: 0; 
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at center, #1a2a3a 0%, #0f1923 100%);
+        }
+
+        /* KAR YAĞIŞI EFEKTİ */
+        @keyframes snow {
+            0% { transform: translateY(-10vh); }
+            100% { transform: translateY(110vh); }
+        }
+        .snow {
+            position: fixed; top: -10px; color: white; user-select: none; z-index: -1;
+            animation: snow linear infinite;
+        }
+
         /* NAVİGASYON */
         nav { background: #1f2326; padding: 10px 20px; border-bottom: 3px solid #ff4655; display: flex; justify-content: space-between; align-items: center; }
         .logo-section { display: flex; align-items: center; gap: 12px; }
         .nav-logo { height: 35px; filter: drop-shadow(0 0 5px #ff4655); }
         .site-title { font-size: 26px; font-weight: bold; color: #ff4655; letter-spacing: 3px; }
 
-        /* RULET SİSTEMİ */
-        .roulette-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin: 50px 0;
+        /* HEDİYE PAKETİ EKRANI */
+        #gift-box-container { margin-top: 50px; }
+        .gift-box {
+            width: 200px; cursor: pointer; transition: transform 0.3s;
+            filter: drop-shadow(0 0 15px #ff4655);
         }
+        .gift-box:hover { transform: scale(1.1) rotate(5deg); }
+        .gift-hint { color: #ff4655; font-weight: bold; margin-top: 15px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
+        /* RULET SİSTEMİ (BAŞTA GİZLİ) */
+        #roulette-section { display: none; margin-top: 30px; animation: fadeIn 1s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .roulette-wrapper { position: relative; display: flex; justify-content: center; width: 100%; margin: 30px 0; }
         .roulette-container {
-            position: relative;
-            width: 600px;
-            height: 160px;
-            border: 2px solid #ff4655;
-            background: #111;
-            overflow: hidden;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
+            position: relative; width: 600px; height: 160px; border: 3px solid #ff4655;
+            background: #111; overflow: hidden; border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255, 70, 85, 0.4);
         }
+        .selector { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ff4655; z-index: 10; box-shadow: 0 0 15px #ff4655; }
+        #roulette-strip { display: flex; position: absolute; left: 0; top: 0; height: 100%; transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1); will-change: transform; }
+        .skin-item { min-width: 160px; height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #222; background: linear-gradient(180deg, #1b1e21 0%, #0f1923 100%); }
+        .skin-item img { width: 120px; object-fit: contain; }
 
-        .selector {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 100%;
-            background-color: #ff4655;
-            z-index: 10;
-            box-shadow: 0 0 15px #ff4655;
-        }
-
-        #roulette-strip {
-            display: flex;
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1);
-            will-change: transform;
-        }
-
-        .skin-item {
-            min-width: 160px;
-            height: 160px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-right: 1px solid #222;
-            background: linear-gradient(180deg, #1b1e21 0%, #0f1923 100%);
-        }
-
-        .skin-item img { 
-            width: 120px; 
-            height: auto; 
-            object-fit: contain;
-            margin-bottom: 10px; 
-        }
-
-        .skin-item span { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #ece8e1; }
-
-        /* DİĞER STİLLER */
-        #auth-container { margin: 60px auto; max-width: 400px; background: rgba(27, 31, 35, 0.95); padding: 40px; border: 1px solid #ff4655; }
+        /* DİĞERLERİ */
+        #auth-container { margin: 60px auto; max-width: 400px; background: rgba(27, 31, 35, 0.95); padding: 40px; border: 1px solid #ff4655; border-radius: 8px; }
         input { width: 90%; padding: 12px; margin: 10px 0; background: #0f1923; border: 1px solid #444; color: white; outline: none; }
         .btn-valorant { background: #ff4655; color: white; border: none; padding: 12px 24px; cursor: pointer; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.3s; }
         .btn-valorant:hover { background: #ece8e1; color: #ff4655; }
-        .btn-valorant:disabled { background: #555; cursor: not-allowed; }
-        #game-container { display: none; margin-top: 30px; }
-        .inventory { margin-top: 50px; padding: 20px; background: rgba(0,0,0,0.3); }
+        .inventory { margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.3); border-top: 1px solid #333; }
         .item-card { background: #1f2326; padding: 10px; margin: 8px; border: 1px solid #444; display: inline-block; min-width: 150px; }
     </style>
 </head>
@@ -102,49 +81,74 @@
 </nav>
 
 <div id="auth-container">
-    <h2 style="color: #ece8e1; margin-top: 0;">VALORANT ile KAYIT OL</h2>
+    <h2 style="color: #ece8e1; margin: 0 0 20px 0;">YILBAŞI GİRİŞİ</h2>
     <input type="text" id="username" placeholder="KULLANICI ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
     <button class="btn-valorant" style="width: 100%; margin-top: 20px;" onclick="kayitOl()">HESAP OLUŞTUR</button>
     <button class="btn-valorant" style="width: 100%; margin-top: 12px; background: #333;" onclick="girisYap()">GİRİŞ YAP</button>
 </div>
 
-<div id="game-container">
+<div id="game-container" style="display: none;">
     <h1 id="welcome-msg"></h1>
     
-    <div class="roulette-wrapper">
-        <div class="selector"></div>
-        <div class="roulette-container">
-            <div id="roulette-strip"></div>
-        </div>
+    <div id="gift-box-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/4213/4213958.png" class="gift-box" onclick="hediyeyiAc()" id="main-gift-img">
+        <p class="gift-hint" id="gift-text">HEDİYENİ AÇMAK İÇİN TIKLA!</p>
     </div>
 
-    <button id="spin-btn" class="btn-valorant" onclick="ruletiBaslat()">KASAYI AÇ</button>
-    <div id="result" style="margin-top: 20px; font-size: 20px; color: #ff4655; font-weight: bold;"></div>
+    <div id="roulette-section">
+        <div class="roulette-wrapper">
+            <div class="selector"></div>
+            <div class="roulette-container">
+                <div id="roulette-strip"></div>
+            </div>
+        </div>
+        <button id="spin-btn" class="btn-valorant" onclick="ruletiBaslat()">KASAYI ÇEVİR</button>
+        <div id="result" style="margin-top: 20px; font-size: 22px; color: #ff4655; font-weight: bold; min-height: 30px;"></div>
+    </div>
 
     <div class="inventory">
-        <h4>ENVANTERİN</h4>
+        <h4>🎁 KAZANDIKLARIN</h4>
         <div id="items-list">Henüz bir öğe yok.</div>
     </div>
 </div>
 
 <script>
+    // KAR YAĞIŞI OLUŞTURUCU
+    function createSnow() {
+        for(let i=0; i<50; i++) {
+            let flake = document.createElement('div');
+            flake.className = 'snow';
+            flake.innerHTML = '❄';
+            flake.style.left = Math.random() * 100 + 'vw';
+            flake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            flake.style.opacity = Math.random();
+            flake.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(flake);
+        }
+    }
+    createSnow();
+
     const SUPABASE_URL = 'https://iigemvvlznvgneghevev.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // KENDİ YÜKLEDİĞİN RESİM İSİMLERİYLE HAVUZ
     const skinHavuzu = [
         { ad: "Yağmacı Vandal", img: "7-seviye-yagmaci-vandalstil-3-beyaz_valorant_full_skin_166121.png" },
-        { ad: "Ejder Ateşi Operator", img: "ejder-atesi-operator_valorant_full_skin_166540.png" },
+        { ad: "Ejder Ateşi Operator", img: "Ejder Ateşi Operator - Valorant.png" },
         { ad: "İyon Sheriff", img: "iyon-sheriff_valorant_full_skin_166481.png" },
         { ad: "Oni Phantom", img: "oni-phantom_valorant_full_skin_166208.png" }
     ];
 
+    function hediyeyiAc() {
+        document.getElementById('gift-box-container').style.display = 'none';
+        document.getElementById('roulette-section').style.display = 'block';
+        ruletHazirla();
+    }
+
     function ruletHazirla() {
         const strip = document.getElementById('roulette-strip');
         strip.innerHTML = '';
-        // 80 öğe ekleyerek uzun bir şerit oluşturuyoruz
         for(let i=0; i<80; i++) {
             const skin = skinHavuzu[Math.floor(Math.random() * skinHavuzu.length)];
             strip.innerHTML += `
@@ -162,26 +166,23 @@
         const resultDiv = document.getElementById('result');
         
         btn.disabled = true;
-        resultDiv.innerText = "";
+        resultDiv.innerText = "Şansın dönüyor...";
         
         strip.style.transition = "none";
         strip.style.transform = "translateX(0)";
-        
         ruletHazirla();
 
         setTimeout(() => {
             strip.style.transition = "transform 5s cubic-bezier(0.1, 0, 0.1, 1)";
-            // 160px genişliğinde skinler kullandığımız için ona göre mesafe
             const rastgeleKayma = Math.floor(Math.random() * 800) + 7000; 
             strip.style.transform = `translateX(-${rastgeleKayma}px)`;
 
             setTimeout(() => {
                 const items = document.getElementsByClassName('skin-item');
-                // Tam ortadaki skini bulma hesabı (600px container / 2 = 300px orta nokta)
                 const index = Math.floor((rastgeleKayma + 300) / 160);
                 const kazanan = items[index].querySelector('span').innerText;
                 
-                resultDiv.innerText = "KAZANILAN: " + kazanan;
+                resultDiv.innerText = "✨ TEBRİKLER: " + kazanan + " ✨";
                 btn.disabled = false;
 
                 const list = document.getElementById("items-list");
@@ -191,13 +192,12 @@
         }, 100);
     }
 
+    // AUTH (GİRİŞ)
     async function kayitOl() {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
-        if(!u || !p) return alert("Boş bırakma!");
         const { error } = await _supabase.from('users').insert([{ username: u, password: p }]);
-        if (error) alert("Hata: " + error.message);
-        else alert("Kayıt başarılı!");
+        if (error) alert("Hata!"); else alert("Kayıt başarılı!");
     }
 
     async function girisYap() {
@@ -207,12 +207,9 @@
         if (data && data.length > 0) {
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
-            document.getElementById('welcome-msg').innerText = "Hoş geldin, " + u;
+            document.getElementById('welcome-msg').innerText = "Mutlu Yıllar, " + u + "!";
             document.getElementById('user-display').innerText = "👤 " + u;
-            ruletHazirla();
-        } else {
-            alert("Hatalı giriş!");
-        }
+        } else { alert("Hatalı giriş!"); }
     }
 </script>
 
